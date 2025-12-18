@@ -1048,7 +1048,7 @@ int main(){
         out<<"Data Points:\n";
         for(int i=0;i<n;i++) out<<"("<<x[i]<<", "<<y[i]<<")\n";
         out<<"Interpolation Point: "<<p<<"\nStep Size: "<<x[1]-x[0]<<"\n";
-        out<<"Forward Difference Table (Transposed):\n";
+        out<<"Forward Difference Table:\n";
         for(int j=0;j<n;j++){
             for(int i=0;i<n-j;i++) out<<setw(6)<<t[i][j]<<" ";
             out<<"\n";
@@ -1167,7 +1167,7 @@ int main(){
         out<<"Data Points:\n";
         for(int i=0;i<n;i++) out<<"("<<x[i]<<", "<<y[i]<<")\n";
         out<<"Interpolation Point: "<<p<<"\nStep Size: "<<x[1]-x[0]<<"\n";
-        out<<"Backward Difference Table (Transposed):\n";
+        out<<"Backward Difference Table:\n";
         for(int j=0;j<n;j++){
             for(int i=j;i<n;i++) out<<setw(6)<<t[i][j]<<" ";
             out<<"\n";
