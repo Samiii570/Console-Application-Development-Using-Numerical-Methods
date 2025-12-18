@@ -1003,20 +1003,112 @@ Roots:
 
 #### Newton Forward Code
 
-```python
-# Add your code here
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+double factorial(int n){
+    double f=1;
+    for(int i=2;i<=n;i++) f*=i;
+    return f;
+}
+
+vector<vector<double>> forwardTable(const vector<double>& y){
+    int n=y.size();
+    vector<vector<double>> table(n, vector<double>(n,0));
+    for(int i=0;i<n;i++) table[i][0]=y[i];
+    for(int j=1;j<n;j++)
+        for(int i=0;i<n-j;i++)
+            table[i][j]=table[i+1][j-1]-table[i][j-1];
+    return table;
+}
+
+double forwardInterpolation(const vector<double>& x, const vector<vector<double>>& t, double p){
+    double h=x[1]-x[0], u=(p-x[0])/h, res=t[0][0], term=1;
+    for(int i=1;i<t.size();i++){
+        term*=(u-i+1);
+        res+=term*t[0][i]/factorial(i);
+    }
+    return res;
+}
+
+int main(){
+    ifstream in("input.txt");
+    ofstream out("output.txt");
+    int tests; in>>tests;
+    out<<fixed<<setprecision(6);
+    for(int tc=1;tc<=tests;tc++){
+        int n; in>>n;
+        vector<double> x(n), y(n);
+        for(int i=0;i<n;i++) in>>x[i];
+        for(int i=0;i<n;i++) in>>y[i];
+        double p; in>>p;
+        auto t=forwardTable(y);
+        out<<"Test Case "<<tc<<"\n";
+        out<<"Data Points:\n";
+        for(int i=0;i<n;i++) out<<"("<<x[i]<<", "<<y[i]<<")\n";
+        out<<"Interpolation Point: "<<p<<"\nStep Size: "<<x[1]-x[0]<<"\n";
+        out<<"Forward Difference Table (Transposed):\n";
+        for(int j=0;j<n;j++){
+            for(int i=0;i<n-j;i++) out<<setw(6)<<t[i][j]<<" ";
+            out<<"\n";
+        }
+        out<<"Interpolated Value: "<<forwardInterpolation(x,t,p)<<"\n\n";
+    }
+}
+
 ```
 
 #### Newton Forward Input
 
 ```
-[Add your input format here]
+2
+5
+0 1 2 3 4
+1 2 4 8 16
+2.5
+4
+1 2 3 4
+1 8 27 64
+2.5
+
 ```
 
 #### Newton Forward Output
 
 ```
-[Add your output format here]
+Test Case 1
+Data Points:
+(0, 1)
+(1, 2)
+(2, 4)
+(3, 8)
+(4, 16)
+Interpolation Point: 2.5
+Step Size: 1
+Forward Difference Table (Transposed):
+     1      1      1      1      1 
+     2      2      2      2 
+     4      4      4 
+     8      8 
+    16 
+Interpolated Value: 5.648438
+
+Test Case 2
+Data Points:
+(1, 1)
+(2, 8)
+(3, 27)
+(4, 64)
+Interpolation Point: 2.5
+Step Size: 1
+Forward Difference Table (Transposed):
+     1      7     12      6 
+     8     19     18 
+    27     37 
+    64 
+Interpolated Value: 15.625000
+
 ```
 
 ---
@@ -1029,20 +1121,113 @@ Roots:
 
 #### Newton Backward Code
 
-```python
-# Add your code here
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+double factorial(int n){
+    double f=1;
+    for(int i=2;i<=n;i++) f*=i;
+    return f;
+}
+
+vector<vector<double>> backwardTable(const vector<double>& y){
+    int n=y.size();
+    vector<vector<double>> t(n, vector<double>(n,0));
+    for(int i=0;i<n;i++) t[i][0]=y[i];
+    for(int j=1;j<n;j++){
+        for(int i=n-1;i>=j;i--) t[i][j]=t[i][j-1]-t[i-1][j-1];
+    }
+    return t;
+}
+
+double backwardInterpolation(const vector<double>& x,const vector<vector<double>>& t,double p){
+    int n=x.size();
+    double h=x[1]-x[0], u=(p-x[n-1])/h, res=t[n-1][0], term=1;
+    for(int i=1;i<n;i++){
+        term*=(u+i-1);
+        res+=term*t[n-1][i]/factorial(i);
+    }
+    return res;
+}
+
+int main(){
+    ifstream in("input.txt");
+    ofstream out("output.txt");
+    int tests; in>>tests;
+    out<<fixed<<setprecision(6);
+    for(int tc=1;tc<=tests;tc++){
+        int n; in>>n;
+        vector<double> x(n), y(n);
+        for(int i=0;i<n;i++) in>>x[i];
+        for(int i=0;i<n;i++) in>>y[i];
+        double p; in>>p;
+        auto t=backwardTable(y);
+        out<<"Test Case "<<tc<<"\n";
+        out<<"Data Points:\n";
+        for(int i=0;i<n;i++) out<<"("<<x[i]<<", "<<y[i]<<")\n";
+        out<<"Interpolation Point: "<<p<<"\nStep Size: "<<x[1]-x[0]<<"\n";
+        out<<"Backward Difference Table (Transposed):\n";
+        for(int j=0;j<n;j++){
+            for(int i=j;i<n;i++) out<<setw(6)<<t[i][j]<<" ";
+            out<<"\n";
+        }
+        out<<"Interpolated Value: "<<backwardInterpolation(x,t,p)<<"\n\n";
+    }
+}
+
 ```
 
 #### Newton Backward Input
 
 ```
-[Add your input format here]
+2
+5
+0 1 2 3 4
+1 2 4 8 16
+2.5
+4
+1 2 3 4
+1 8 27 64
+2.5
+
 ```
 
 #### Newton Backward Output
 
 ```
-[Add your output format here]
+Test Case 1
+Data Points:
+(0, 1)
+(1, 2)
+(2, 4)
+(3, 8)
+(4, 16)
+Interpolation Point: 2.5
+Step Size: 1
+Backward Difference Table (Transposed):
+     1      1      1      1      1 
+     2      2      2      2 
+     4      4      4 
+     8      8 
+    16 
+Interpolated Value: 5.648438
+
+Test Case 2
+Data Points:
+(1, 1)
+(2, 8)
+(3, 27)
+(4, 64)
+Interpolation Point: 2.5
+Step Size: 1
+Backward Difference Table (Transposed):
+     1      7     12      6 
+     8     19     18 
+    27     37 
+    64 
+Interpolated Value: 15.625000
+
 ```
 
 ---
@@ -1056,19 +1241,117 @@ Roots:
 #### Newton Divided Difference Code
 
 ```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+pair<vector<vector<double>>, int> dividedTable(const vector<double>& x, vector<double> y) {
+    int n = y.size();
+    vector<vector<double>> table(n, vector<double>(n, 0));
+    for (int i = 0; i < n; i++) table[i][0] = y[i];
+    for (int j = 1; j < n; j++)
+        for (int i = 0; i < n - j; i++)
+            table[i][j] = (table[i + 1][j - 1] - table[i][j - 1]) / (x[i + j] - x[i]);
+    int order = 0;
+    for (int i = 0; i < n; i++)
+        if (abs(table[0][i]) > 1e-6) order = i;
+    return {table, order};
+}
+
+double interpolate(const vector<double>& x, const vector<vector<double>>& table, double p) {
+    double res = table[0][0], term = 1;
+    for (int i = 1; i < table.size(); i++) {
+        term *= (p - x[i - 1]);
+        res += table[0][i] * term;
+    }
+    return res;
+}
+
+int main() {
+    ifstream in("input.txt");
+    ofstream out("output.txt");
+    int tests;
+    in >> tests;
+    out << fixed << setprecision(6);
+    for (int tc = 1; tc <= tests; tc++) {
+        int n; in >> n;
+        vector<double> x(n), y(n);
+        for (int i = 0; i < n; i++) in >> x[i];
+        for (int i = 0; i < n; i++) in >> y[i];
+        double p; in >> p;
+        auto [table, order] = dividedTable(x, y);
+        double val = interpolate(x, table, p);
+        double error = (table[0][order + 1] != 0 ? table[0][order + 1] : 0);
+        out << "Test Case " << tc << "\n";
+        out << "Data Points:\n";
+        for (int i = 0; i < n; i++)
+            out << "(" << x[i] << ", " << y[i] << ")\n";
+        out << "Interpolation Point: " << p << "\n";
+        out << "Divided Difference Table:\n";
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n - i; j++)
+                out << table[i][j] << " ";
+            out << "\n";
+        }
+        out << "Polynomial Order Detected: " << order << "\n";
+        out << "Interpolated Value: " << val << "\n";
+        out << "Estimated Error (next term): " << error << "\n\n";
+    }
+}
 
 ```
 
 #### Newton Divided Difference Input
 
 ```
-[Add your input format here]
+2
+5
+0 1 2 3 4
+1 2 4 8 16
+2.5
+4
+1 2 3 4
+1 8 27 64
+2.5
+
 ```
 
 #### Newton Divided Difference Output
 
 ```
-[Add your output format here]
+Test Case 1
+Data Points:
+(0, 1)
+(1, 2)
+(2, 4)
+(3, 8)
+(4, 16)
+Interpolation Point: 2.5
+Divided Difference Table:
+1 1 1 0 0 
+2 1 2 4 
+4 4 8 
+8 12 
+16 
+Polynomial Order Detected: 4
+Interpolated Value: 5.648438
+Estimated Error (next term): 0
+
+Test Case 2
+Data Points:
+(1, 1)
+(2, 8)
+(3, 27)
+(4, 64)
+Interpolation Point: 2.5
+Divided Difference Table:
+1 7 6 1 
+8 19 18 
+27 37 
+64 
+Polynomial Order Detected: 3
+Interpolated Value: 15.625000
+Estimated Error (next term): 0
+
 ```
 
 ---
