@@ -592,24 +592,93 @@ In this project, various important methods of Numerical Methods have been implem
 
 #### Simpson 1/3 Theory
 
-[Add your theory content here]
+```
+Numerical integration is used to evaluate definite integrals when the analytical solution of an integral is either difficult or impossible to obtain. Simpson’s 1/3 Rule is one of the most widely used numerical integration techniques due to its simplicity and relatively high accuracy. In this method, the entire integration interval is divided into an even number of equal sub-intervals. The fundamental assumption of Simpson’s 1/3 Rule is that the function can be approximated by a second-degree polynomial (parabola) over each pair of consecutive sub-intervals.
+Unlike the trapezoidal rule, which assumes linear variation of the function, Simpson’s 1/3 Rule assumes a smooth and continuous curvature of the function. As a result, it provides better accuracy, especially for functions that are reasonably smooth within the given limits.
+
+Formula :
+Let the lower and upper limits of integration be a and b respectively. The interval [a, b] is divided into n equal sub-intervals, where n must be an even number. 
+step size, h = (b − a) / n.
+The approximate value of the definite integral is given by:
+∫a to b f(x) dx ≈ (h/3)[f(x0) + f(xn) + 4(f(x1)+f(x3)+…) + 2(f(x2)+f(x4)+…)]
+
+Algorithm :
+1. Read the lower limit a, upper limit b, and an even number of sub-intervals n. 
+2. Calculate the step size h using h = (b − a) / n. 
+3. Evaluate the function at the first and last points and add them.
+4.Evaluate the function at all odd-indexed points and multiply each by 4. 
+5. Evaluate the function at all even-indexed points (excluding boundaries) and multiply each by 2. 6. Add all the weighted function values. 
+7. Multiply the total sum by h/3 to obtain the approximate value of the integral.
+
+Working Principle :
+Simpson’s 1/3 Rule works by fitting a parabolic curve through three equally spaced points of the function. By integrating this parabolic approximation instead of the original function, the area under the curve is estimated with improved precision. The use of different weighting factors for odd and even indexed points ensures that the curvature of the function is properly accounted for.
+
+```
 
 #### Simpson 1/3 Code
 
-```python
-# Add your code here
+```cpp
+#include<iostream>
+#include<fstream>
+#include<cmath>
+using namespace std;
+
+double f(double x){
+    return x*x+1;
+}
+
+double simpsonOneThird(double a,double b,int n){
+    double h=(b-a)/n;
+    double sum=f(a)+f(b);
+    for(int i=1;i<n;i++){
+        double x=a+i*h;
+        if(i%2==0) sum+=2*f(x);
+        else sum+=4*f(x);
+    }
+    return (h/3)*sum;
+}
+
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output_1_3.txt");
+    double a,b;
+    int n;
+    int t=1;
+    while(fin>>a>>b>>n){
+        fout<<"Test case "<<t<<": a="<<a<<", b="<<b<<", n="<<n<<"\n";
+        double result=simpsonOneThird(a,b,n);
+        fout<<"Approximate integral="<<result<<"\n\n";
+        t++;
+    }
+    fin.close();
+    fout.close();
+    return 0;
+}
+
+
 ```
 
 #### Simpson 1/3 Input
 
 ```
-[Add your input format here]
+0 2 4
+1 3 6
+0 5 12
+
 ```
 
 #### Simpson 1/3 Output
 
 ```
-[Add your output format here]
+Test case 1: a=0, b=2, n=4
+Approximate integral=4.66667
+
+Test case 2: a=1, b=3, n=6
+Approximate integral=10
+
+Test case 3: a=0, b=5, n=12
+Approximate integral=46.875
+
 ```
 
 ---
@@ -622,7 +691,7 @@ In this project, various important methods of Numerical Methods have been implem
 
 #### Simpson 3/8 Code
 
-```python
+```cpp
 # Add your code here
 ```
 
