@@ -132,20 +132,114 @@ In this project, various important methods of Numerical Methods have been implem
 
 #### Gauss Elimination Code
 
-```python
-# Add your code here
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+void gaussElimination(ifstream &in,ofstream &out)
+{
+    for(int c=1;c<=3;c++)
+    {
+        int n;
+        in>>n;
+
+        vector<vector<double>> a(n,vector<double>(n+1));
+        for(int i=0;i<n;i++)
+            for(int j=0;j<=n;j++)
+                in>>a[i][j];
+
+        for(int i=0;i<n;i++)
+        {
+            int p=i;
+            for(int j=i;j<n;j++)
+                if(fabs(a[j][i])>fabs(a[p][i])) p=j;
+            swap(a[i],a[p]);
+
+            if(fabs(a[i][i])<1e-9) continue;
+
+            for(int j=i+1;j<n;j++)
+            {
+                double r=a[j][i]/a[i][i];
+                for(int k=i;k<=n;k++)
+                    a[j][k]-=r*a[i][k];
+            }
+        }
+
+        int r1=0,r2=0;
+        for(int i=0;i<n;i++)
+        {
+            bool nz=false;
+            for(int j=0;j<n;j++)
+                if(fabs(a[i][j])>1e-9) nz=true;
+            if(nz) r1++;
+
+            nz=false;
+            for(int j=0;j<=n;j++)
+                if(fabs(a[i][j])>1e-9) nz=true;
+            if(nz) r2++;
+        }
+
+        out<<"Case "<<c<<": ";
+
+        if(r1!=r2)
+        {
+            out<<"No Solution\n";
+        }
+        else if(r1<n)
+        {
+            out<<"Infinite Solutions\n";
+        }
+        else
+        {
+            vector<double> x(n);
+            for(int i=n-1;i>=0;i--)
+            {
+                x[i]=a[i][n];
+                for(int j=i+1;j<n;j++)
+                    x[i]-=a[i][j]*x[j];
+                x[i]/=a[i][i];
+            }
+
+            out<<"Unique Solution ";
+            for(int i=0;i<n;i++)
+                out<<fixed<<setprecision(3)<<x[i]<<" ";
+            out<<"\n";
+        }
+    }
+}
+
+int main()
+{
+    ifstream in("gauss_input.txt");
+    ofstream out("gauss_output.txt");
+    gaussElimination(in,out);
+}
+
 ```
 
 #### Gauss Elimination Input
 
 ```
-[Add your input format here]
+3
+2
+1 1 2
+2 2 5
+2
+1 1 2
+2 2 4
+3
+2 1 -1 8
+-3 -1 2 -11
+-2 1 2 -3
+
 ```
 
 #### Gauss Elimination Output
 
 ```
-[Add your output format here]
+Case 1: No Solution
+Case 2: Infinite Solutions
+Case 3: Unique Solution 2.000 3.000 -1.000
 ```
 
 ---
@@ -158,20 +252,133 @@ In this project, various important methods of Numerical Methods have been implem
 
 #### Gauss Jordan Code
 
-```python
-# Add your code here
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+void gaussJordan(ifstream &in,ofstream &out)
+{
+    for(int c=1;c<=3;c++)
+    {
+        int n;
+        in>>n;
+
+        vector<vector<double>> a(n,vector<double>(n+1));
+        for(int i=0;i<n;i++)
+            for(int j=0;j<=n;j++)
+                in>>a[i][j];
+
+        for(int i=0;i<n;i++)
+        {
+            int p=i;
+            for(int j=i;j<n;j++)
+                if(fabs(a[j][i])>fabs(a[p][i])) p=j;
+            swap(a[i],a[p]);
+
+            if(fabs(a[i][i])<1e-9) continue;
+
+            double d=a[i][i];
+            for(int j=0;j<=n;j++)
+                a[i][j]/=d;
+
+            for(int k=0;k<n;k++)
+                if(k!=i)
+                {
+                    double r=a[k][i];
+                    for(int j=0;j<=n;j++)
+                        a[k][j]-=r*a[i][j];
+                }
+        }
+
+        out<<"Case "<<c<<":\n";
+        out<<"Reduced Row Echelon Form:\n";
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<=n;j++)
+                out<<fixed<<setprecision(3)<<a[i][j]<<" ";
+            out<<"\n";
+        }
+
+        int r1=0,r2=0;
+        for(int i=0;i<n;i++)
+        {
+            bool nz=false;
+            for(int j=0;j<n;j++)
+                if(fabs(a[i][j])>1e-9) nz=true;
+            if(nz) r1++;
+
+            nz=false;
+            for(int j=0;j<=n;j++)
+                if(fabs(a[i][j])>1e-9) nz=true;
+            if(nz) r2++;
+        }
+
+        if(r1!=r2)
+        {
+            out<<"No Solution\n\n";
+        }
+        else if(r1<n)
+        {
+            out<<"Infinite Solutions\n\n";
+        }
+        else
+        {
+            out<<"Unique Solution ";
+            for(int i=0;i<n;i++)
+                out<<fixed<<setprecision(3)<<a[i][n]<<" ";
+            out<<"\n\n";
+        }
+    }
+}
+
+int main()
+{
+    ifstream in("gj_input.txt");
+    ofstream out("gj_output.txt");
+    gaussJordan(in,out);
+}
+
 ```
 
 #### Gauss Jordan Input
 
 ```
-[Add your input format here]
+3
+2
+1 1 2
+2 2 5
+2
+1 1 2
+2 2 4
+3
+2 1 -1 8
+-3 -1 2 -11
+-2 1 2 -3
+
 ```
 
 #### Gauss Jordan Output
 
 ```
-[Add your output format here]
+Case 1:
+Reduced Row Echelon Form:
+1.000 1.000 0.000
+0.000 0.000 1.000
+No Solution
+
+Case 2:
+Reduced Row Echelon Form:
+1.000 1.000 2.000
+0.000 0.000 0.000
+Infinite Solutions
+
+Case 3:
+Reduced Row Echelon Form:
+1.000 0.000 0.000 2.000
+0.000 1.000 0.000 3.000
+0.000 0.000 1.000 -1.000
+Unique Solution 2.000 3.000 -1.000
+
 ```
 
 ---
@@ -184,20 +391,180 @@ In this project, various important methods of Numerical Methods have been implem
 
 #### LU Decomposition Code
 
-```python
-# Add your code here
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+void luDecomposition(ifstream &in,ofstream &out)
+{
+    for(int c=1;c<=3;c++)
+    {
+        int n;
+        in>>n;
+
+        vector<vector<double>> a(n,vector<double>(n));
+        vector<double> b(n);
+
+        for(int i=0;i<n;i++)
+            for(int j=0;j<n;j++)
+                in>>a[i][j];
+        for(int i=0;i<n;i++)
+            in>>b[i];
+
+        vector<vector<double>> l(n,vector<double>(n,0)),u(n,vector<double>(n,0));
+
+        for(int i=0;i<n;i++)
+        {
+            for(int k=i;k<n;k++)
+            {
+                double s=0;
+                for(int j=0;j<i;j++)
+                    s+=l[i][j]*u[j][k];
+                u[i][k]=a[i][k]-s;
+            }
+
+            for(int k=i;k<n;k++)
+            {
+                if(i==k) l[i][i]=1;
+                else
+                {
+                    if(fabs(u[i][i])<1e-9) continue;
+                    double s=0;
+                    for(int j=0;j<i;j++)
+                        s+=l[k][j]*u[j][i];
+                    l[k][i]=(a[k][i]-s)/u[i][i];
+                }
+            }
+        }
+
+        int r1=0,r2=0;
+        for(int i=0;i<n;i++)
+        {
+            bool nz=false;
+            for(int j=0;j<n;j++)
+                if(fabs(a[i][j])>1e-9) nz=true;
+            if(nz) r1++;
+
+            if(nz || fabs(b[i])>1e-9) r2++;
+        }
+
+        out<<"Case "<<c<<":\n";
+
+        out<<"Lower Triangular Matrix (L):\n";
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+                out<<fixed<<setprecision(3)<<l[i][j]<<" ";
+            out<<"\n";
+        }
+
+        out<<"Upper Triangular Matrix (U):\n";
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+                out<<fixed<<setprecision(3)<<u[i][j]<<" ";
+            out<<"\n";
+        }
+
+        if(r1!=r2)
+        {
+            out<<"No Solution\n\n";
+            continue;
+        }
+        else if(r1<n)
+        {
+            out<<"Infinite Solutions\n\n";
+            continue;
+        }
+
+        vector<double> y(n),x(n);
+
+        for(int i=0;i<n;i++)
+        {
+            y[i]=b[i];
+            for(int j=0;j<i;j++)
+                y[i]-=l[i][j]*y[j];
+        }
+
+        for(int i=n-1;i>=0;i--)
+        {
+            x[i]=y[i];
+            for(int j=i+1;j<n;j++)
+                x[i]-=u[i][j]*x[j];
+            x[i]/=u[i][i];
+        }
+
+        out<<"Unique Solution ";
+        for(int i=0;i<n;i++)
+            out<<fixed<<setprecision(3)<<x[i]<<" ";
+        out<<"\n\n";
+    }
+}
+
+int main()
+{
+    ifstream in("lu_input.txt");
+    ofstream out("lu_output.txt");
+    luDecomposition(in,out);
+}
+
 ```
 
 #### LU Decomposition Input
 
 ```
-[Add your input format here]
+3
+2
+1 1
+2 2
+2 5
+3
+1 1 1
+2 2 2
+3 3 3
+6 12 20
+3
+2 1 1
+4 -6 0
+-2 7 2
+5 -2 9
+
 ```
 
 #### LU Decomposition Output
 
 ```
-[Add your output format here]
+Case 1:
+Lower Triangular Matrix (L):
+1.000 0.000
+2.000 1.000
+Upper Triangular Matrix (U):
+1.000 1.000
+0.000 0.000
+No Solution
+
+Case 2:
+Lower Triangular Matrix (L):
+1.000 0.000 0.000
+2.000 1.000 0.000
+3.000 0.000 1.000
+Upper Triangular Matrix (U):
+1.000 1.000 1.000
+0.000 0.000 0.000
+0.000 0.000 0.000
+Infinite Solutions
+
+Case 3:
+Lower Triangular Matrix (L):
+1.000 0.000 0.000
+2.000 1.000 0.000
+-1.000 -1.000 1.000
+Upper Triangular Matrix (U):
+2.000 1.000 1.000
+0.000 -8.000 -2.000
+0.000 0.000 1.000
+Unique Solution 1.000 1.000 2.000
+
 ```
 
 ---
@@ -210,20 +577,169 @@ In this project, various important methods of Numerical Methods have been implem
 
 #### Matrix Inversion Code
 
-```python
-# Add your code here
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+void matrixInversion(ifstream &in,ofstream &out)
+{
+    for(int c=1;c<=3;c++)
+    {
+        int n;
+        in>>n;
+
+        vector<vector<double>> a(n,vector<double>(2*n));
+        vector<double> b(n);
+
+        for(int i=0;i<n;i++)
+            for(int j=0;j<n;j++)
+                in>>a[i][j];
+
+        for(int i=0;i<n;i++)
+            in>>b[i];
+
+        for(int i=0;i<n;i++)
+            for(int j=n;j<2*n;j++)
+                a[i][j]=(i==j-n);
+
+        out<<"Case "<<c<<":\n";
+
+        out<<"Vector B:\n";
+        for(int i=0;i<n;i++)
+            out<<fixed<<setprecision(3)<<b[i]<<" ";
+        out<<"\n";
+
+        out<<"Augmented Matrix [A | I]:\n";
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<2*n;j++)
+                out<<fixed<<setprecision(3)<<a[i][j]<<" ";
+            out<<"\n";
+        }
+
+        for(int i=0;i<n;i++)
+        {
+            int p=i;
+            for(int j=i;j<n;j++)
+                if(fabs(a[j][i])>fabs(a[p][i])) p=j;
+            swap(a[i],a[p]);
+
+            double d=a[i][i];
+            for(int j=0;j<2*n;j++)
+                a[i][j]/=d;
+
+            for(int k=0;k<n;k++)
+                if(k!=i)
+                {
+                    double r=a[k][i];
+                    for(int j=0;j<2*n;j++)
+                        a[k][j]-=r*a[i][j];
+                }
+        }
+
+        out<<"Reduced Row Echelon Form:\n";
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<2*n;j++)
+                out<<fixed<<setprecision(3)<<a[i][j]<<" ";
+            out<<"\n";
+        }
+
+        out<<"Inverse Matrix:\n";
+        for(int i=0;i<n;i++)
+        {
+            for(int j=n;j<2*n;j++)
+                out<<fixed<<setprecision(3)<<a[i][j]<<" ";
+            out<<"\n";
+        }
+
+        vector<double> x(n,0);
+        for(int i=0;i<n;i++)
+            for(int j=0;j<n;j++)
+                x[i]+=a[i][j+n]*b[j];
+
+        out<<"Solution Vector:\n";
+        for(int i=0;i<n;i++)
+            out<<fixed<<setprecision(3)<<x[i]<<" ";
+        out<<"\n\n";
+    }
+}
+
+int main()
+{
+    ifstream in("inv_input.txt");
+    ofstream out("inv_output.txt");
+    matrixInversion(in,out);
+}
+
 ```
 
 #### Matrix Inversion Input
 
 ```
-[Add your input format here]
+3
+2
+1 2
+2 4
+5 10
+3
+1 1 1
+2 2 2
+3 3 3
+6 12 18
+3
+2 1 1
+4 -6 0
+-2 7 2
+5 -2 9
+
 ```
 
 #### Matrix Inversion Output
 
 ```
-[Add your output format here]
+Case 1:
+Vector B:
+5.000 10.000
+Augmented Matrix [A | I]:
+1.000 2.000 1.000 0.000
+2.000 4.000 0.000 1.000
+Reduced Row Echelon Form:
+1.000 2.000 0.500 -0.500
+0.000 0.000 -1.000 1.000
+Matrix is Singular
+
+Case 2:
+Vector B:
+6.000 12.000 18.000
+Augmented Matrix [A | I]:
+1.000 1.000 1.000 1.000 0.000 0.000
+2.000 2.000 2.000 0.000 1.000 0.000
+3.000 3.000 3.000 0.000 0.000 1.000
+Reduced Row Echelon Form:
+1.000 1.000 1.000 0.333 -0.167 0.000
+0.000 0.000 0.000 -0.667 0.333 0.000
+0.000 0.000 0.000 -1.000 0.000 1.000
+Matrix is Singular
+
+Case 3:
+Vector B:
+5.000 -2.000 9.000
+Augmented Matrix [A | I]:
+2.000 1.000 1.000 1.000 0.000 0.000
+4.000 -6.000 0.000 0.000 1.000 0.000
+-2.000 7.000 2.000 0.000 0.000 1.000
+Reduced Row Echelon Form:
+1.000 0.000 0.000 0.250 0.063 -0.063
+0.000 1.000 0.000 0.500 0.125 0.125
+0.000 0.000 1.000 -0.750 -0.125 0.375
+Inverse Matrix:
+0.250 0.063 -0.063
+0.500 0.125 0.125
+-0.750 -0.125 0.375
+Solution Vector:
+1.000 1.000 2.000
+
 ```
 
 ---
@@ -428,8 +944,8 @@ In this project, various important methods of Numerical Methods have been implem
 
 #### Newton Divided Difference Code
 
-```python
-# Add your code here
+```cpp
+
 ```
 
 #### Newton Divided Difference Input
@@ -458,20 +974,131 @@ In this project, various important methods of Numerical Methods have been implem
 
 #### Differentiation Forward Code
 
-```python
-# Add your code here
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+double f(double x)
+{
+    return x*x*x;
+}
+
+void forwardDiff(ifstream &in,ofstream &out)
+{
+    int T;
+    in>>T;
+
+    for(int c=1;c<=T;c++)
+    {
+        int i;
+        double a,b,p;
+        in>>i;
+        in>>a>>b;
+        in>>p;
+
+        int n=i+1;
+        double h=(b-a)/i;
+
+        vector<double> x(n),y(n);
+        for(int k=0;k<n;k++)
+        {
+            x[k]=a+k*h;
+            y[k]=f(x[k]);
+        }
+
+        vector<vector<double>> d(n,vector<double>(n));
+        for(int k=0;k<n;k++)
+            d[k][0]=y[k];
+
+        for(int j=1;j<n;j++)
+            for(int k=0;k<n-j;k++)
+                d[k][j]=d[k+1][j-1]-d[k][j-1];
+
+        double u=(p-a)/h;
+
+        double f1=d[0][1];
+        if(n>2) f1+=(2*u-1)*d[0][2]/2.0;
+        if(n>3) f1+=(3*u*u-6*u+2)*d[0][3]/6.0;
+        f1/=h;
+
+        double f2=0;
+        if(n>2) f2+=d[0][2];
+        if(n>3) f2+=(u-1)*d[0][3];
+        f2/=(h*h);
+
+        out<<"Case "<<c<<":\n";
+        out<<"Forward Difference Table:\n";
+        for(int k=0;k<n;k++)
+        {
+            for(int j=0;j<n-k;j++)
+                out<<fixed<<setprecision(3)<<d[k][j]<<" ";
+            out<<"\n";
+        }
+
+        out<<"First Derivative at p = "<<fixed<<setprecision(3)<<p<<" : "<<fixed<<setprecision(3)<<f1<<"\n";
+        out<<"Second Derivative at p = "<<fixed<<setprecision(3)<<p<<" : "<<fixed<<setprecision(3)<<f2<<"\n\n";
+    }
+}
+
+int main()
+{
+    ifstream in("diff_input.txt");
+    ofstream out("diff_output.txt");
+    forwardDiff(in,out);
+}
+
 ```
 
 #### Differentiation Forward Input
 
 ```
-[Add your input format here]
+3
+4
+0 4
+1.5
+4
+0 4
+2.5
+5
+0 5
+1.2
+
 ```
 
 #### Differentiation Forward Output
 
 ```
-[Add your output format here]
+Case 1:
+Forward Difference Table:
+0.000 1.000 6.000 6.000 0.000
+1.000 7.000 12.000 6.000
+8.000 19.000 18.000
+27.000 37.000
+64.000
+First Derivative at p = 1.500 : 6.750
+Second Derivative at p = 1.500 : 9.000
+
+Case 2:
+Forward Difference Table:
+0.000 1.000 6.000 6.000 0.000
+1.000 7.000 12.000 6.000
+8.000 19.000 18.000
+27.000 37.000
+64.000
+First Derivative at p = 2.500 : 18.750
+Second Derivative at p = 2.500 : 15.000
+
+Case 3:
+Forward Difference Table:
+0.000 1.000 6.000 6.000 0.000 0.000
+1.000 7.000 12.000 6.000 0.000
+8.000 19.000 18.000 6.000
+27.000 37.000 24.000
+64.000 61.000
+125.000
+First Derivative at p = 1.200 : 4.320
+Second Derivative at p = 1.200 : 7.200
+
 ```
 
 ---
@@ -484,20 +1111,158 @@ In this project, various important methods of Numerical Methods have been implem
 
 #### Differentiation Backward Code
 
-```python
-# Add your code here
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+double f(double x,vector<double> c)
+{
+    double r=0,p=1;
+    for(double v:c)
+    {
+        r+=v*p;
+        p*=x;
+    }
+    return r;
+}
+
+double df(double x,vector<double> c)
+{
+    double r=0,p=1;
+    for(int i=1;i<(int)c.size();i++)
+    {
+        r+=i*c[i]*p;
+        p*=x;
+    }
+    return r;
+}
+
+void backwardDiff(ifstream &in,ofstream &out)
+{
+    int T;
+    in>>T;
+
+    for(int tc=1;tc<=T;tc++)
+    {
+        int n;
+        in>>n;
+
+        vector<double> c(n+1);
+        for(int i=0;i<=n;i++) in>>c[i];
+
+        int p;
+        in>>p;
+
+        vector<double> x(p),y(p);
+        for(int i=0;i<p;i++)
+        {
+            in>>x[i];
+            y[i]=f(x[i],c);
+        }
+
+        double d;
+        in>>d;
+
+        double h=x[1]-x[0];
+
+        vector<vector<double>> bd(p,vector<double>(p));
+        for(int i=0;i<p;i++) bd[i][0]=y[i];
+
+        for(int j=1;j<p;j++)
+            for(int i=p-1;i>=j;i--)
+                bd[i][j]=bd[i][j-1]-bd[i-1][j-1];
+
+        double s=(d-x[p-1])/h;
+
+        double num=bd[p-1][1];
+        if(p>2) num+=(2*s+1)*bd[p-1][2]/2.0;
+        if(p>3) num+=(3*s*s+6*s+2)*bd[p-1][3]/6.0;
+        num/=h;
+
+        double exact=df(d,c);
+        double err=fabs((exact-num)/exact)*100.0;
+
+        out<<"Case "<<tc<<":\n";
+        out<<"Backward Difference Table:\n";
+        for(int i=0;i<p;i++)
+        {
+            for(int j=0;j<=i;j++)
+                out<<fixed<<setprecision(3)<<bd[i][j]<<" ";
+            out<<"\n";
+        }
+
+        out<<"Numerical Derivative : "<<fixed<<setprecision(3)<<num<<"\n";
+        out<<"Exact Derivative     : "<<fixed<<setprecision(3)<<exact<<"\n";
+        out<<"Error Percentage     : "<<fixed<<setprecision(3)<<err<<" %\n\n";
+    }
+}
+
+int main()
+{
+    ifstream in("backward_input.txt");
+    ofstream out("backward_output.txt");
+    backwardDiff(in,out);
+}
+
 ```
 
 #### Differentiation Backward Input
 
 ```
-[Add your input format here]
+3
+3
+0 0 0 1
+5
+0 1 2 3 4
+3.8
+2
+1 0 1
+4
+1 2 3 4
+3.6
+3
+1 -2 0 1
+5
+0 1 2 3 4
+3.5
+
 ```
 
 #### Differentiation Backward Output
 
 ```
-[Add your output format here]
+Case 1:
+Backward Difference Table:
+0.000
+1.000 1.000
+8.000 7.000 6.000
+27.000 19.000 12.000 6.000
+64.000 37.000 18.000 6.000 0.000
+Numerical Derivative : 43.320
+Exact Derivative     : 43.320
+Error Percentage     : 0.000 %
+
+Case 2:
+Backward Difference Table:
+2.000
+5.000 3.000
+10.000 5.000 2.000
+17.000 7.000 2.000 0.000
+Numerical Derivative : 7.200
+Exact Derivative     : 7.200
+Error Percentage     : 0.000 %
+
+Case 3:
+Backward Difference Table:
+1.000
+0.000 -1.000
+5.000 5.000 6.000
+22.000 17.000 12.000 6.000
+53.000 31.000 14.000 2.000 -4.000
+Numerical Derivative : 33.750
+Exact Derivative     : 34.750
+Error Percentage     : 2.877 %
+
 ```
 
 ---
