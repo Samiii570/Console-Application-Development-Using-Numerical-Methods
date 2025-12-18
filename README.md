@@ -754,20 +754,131 @@ Solution Vector:
 [Add your theory content here]
 
 #### Bisection Code
-```python
-# Add your code here
+```cpp
+#include<iostream>
+#include<fstream>
+#include<vector>
+#include<cmath>
+#include<iomanip>
+using namespace std;
+
+typedef double db;
+
+db evalPoly(db x, vector<db>& coeff){
+    db res=0, p=1;
+    for(int i=0;i<coeff.size();i++){
+        res+=coeff[i]*p;
+        p*=x;
+    }
+    return res;
+}
+
+pair<db,int> bisectionRoot(vector<db>& coeff, db a, db b, db tol, int maxIter){
+    db fa=evalPoly(a,coeff);
+    db fb=evalPoly(b,coeff);
+    db c=0;
+    int iter=0;
+    if(fa*fb>0) return {0,0};
+    for(iter=1;iter<=maxIter;iter++){
+        c=(a+b)/2;
+        db fc=evalPoly(c,coeff);
+        if(fabs(fc)<tol) return {c,iter};
+        if(fa*fc<0){b=c; fb=fc;}
+        else{a=c; fa=fc;}
+    }
+    return {c,iter};
+}
+
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+    int t; fin>>t;
+    fout<<"Total Test Cases: "<<t<<"\n\n";
+    for(int tc=1;tc<=t;tc++){
+        int degree; fin>>degree;
+        vector<db> coeff(degree+1);
+        for(int i=0;i<=degree;i++) fin>>coeff[i];
+        db a,b,tol; int maxIter; fin>>a>>b>>tol>>maxIter;
+
+        fout<<"Test Case "<<tc<<"\nFunction: f(x) = ";
+        for(int i=degree;i>=0;i--){
+            fout<<coeff[i]<<"x^"<<i;
+            if(i>0) fout<<" + ";
+        }
+        fout<<"\nDegree: "<<degree<<"\nError Tolerance: "<<tol<<"\nSearch Limit: "<<b<<"\nRoots:\n";
+
+        vector<pair<db,int>> roots;
+        int steps=1000; // finer scanning
+        db stepSize=(b-a)/steps;
+        for(db x=a;x<b;x+=stepSize){
+            auto r=bisectionRoot(coeff,x,x+stepSize,tol,maxIter);
+            if(r.second>0){
+                bool unique=true;
+                for(auto &p:roots){
+                    if(fabs(p.first - r.first)<1e-6){unique=false; break;}
+                }
+                if(unique) roots.push_back(r);
+            }
+        }
+
+        for(auto &p:roots){
+            fout<<"  x = "<<fixed<<setprecision(6)<<p.first<<"\n";
+        }
+        fout<<"\n";
+    }
+    fin.close(); fout.close();
+    return 0;
+}
+
 ````
 
 #### Bisection Input
 
 ```
-[Add your input format here]
+3
+2
+1 -3 2
+0 3 1e-4 50
+3
+1 -6 11 -6
+0 3 1e-4 100
+2
+2 -7 3
+-2 4 1e-4 100
 ```
 
 #### Bisection Output
 
 ```
-[Add your output format here]
+Total Test Cases: 3
+
+Test Case 1
+Function: f(x) = 2x^2 + -3x^1 + 1x^0
+Degree: 2
+Error Tolerance: 0.0001
+Search Limit: 3
+Roots:
+  x = 0.500063
+  x = 0.999938
+
+Test Case 2
+Function: f(x) = -6.000000x^3 + 11.000000x^2 + -6.000000x^1 + 1.000000x^0
+Degree: 3
+Error Tolerance: 0.000100
+Search Limit: 3.000000
+Roots:
+  x = 0.333375
+  x = 0.499875
+  x = 1.000031
+
+Test Case 3
+Function: f(x) = 3.000000x^2 + -7.000000x^1 + 2.000000x^0
+Degree: 2
+Error Tolerance: 0.000100
+Search Limit: 4.000000
+Roots:
+  x = 0.333344
+  x = 1.999984
 ```
 
 ---
