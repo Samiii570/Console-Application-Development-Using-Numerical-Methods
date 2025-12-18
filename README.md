@@ -1673,20 +1673,119 @@ Error Percentage     : 2.877 %
 
 #### Linear Regression Code
 
-```python
-# Add your code here
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+pair<double,double> linearRegression(const vector<double>& x,const vector<double>& y){
+    int n=x.size();
+    double sx=0,sy=0,sxy=0,sx2=0;
+    for(int i=0;i<n;i++){
+        sx+=x[i];
+        sy+=y[i];
+        sxy+=x[i]*y[i];
+        sx2+=x[i]*x[i];
+    }
+    double b=(n*sxy-sx*sy)/(n*sx2-sx*sx);
+    double a=(sy-b*sx)/n;
+    return {a,b};
+}
+
+int main(){
+    ifstream in("input.txt");
+    ofstream out("output.txt");
+
+    int tests;
+    in>>tests;
+    out<<fixed<<setprecision(6);
+
+    for(int t=1;t<=tests;t++){
+        int n;
+        in>>n;
+        vector<double> x(n),y(n);
+        for(int i=0;i<n;i++) in>>x[i];
+        for(int i=0;i<n;i++) in>>y[i];
+
+        auto result=linearRegression(x,y);
+
+        out<<"Linear Regression\n";
+        out<<"Test Case "<<t<<"\n";
+        out<<"Number of Points: "<<n<<"\n";
+        out<<"Data Points:\n";
+        for(int i=0;i<n;i++) out<<"("<<x[i]<<", "<<y[i]<<")\n";
+        out<<"Target Equation: y = a + bx\n";
+        out<<"Intercept (a): "<<result.first<<"\n";
+        out<<"Slope (b): "<<result.second<<"\n";
+        out<<"Linear Relationship Equation: y = "<<result.first<<" + "<<result.second<<"x\n\n";
+    }
+}
+
 ```
 
 #### Linear Regression Input
 
 ```
-[Add your input format here]
+3
+7
+1 2 3 4 5 6 7
+3 4 4 5 8 9 10
+5
+1 2 3 4 5
+2 4 6 8 10
+6
+1 2 3 4 5 6
+5 7 9 11 13 15
+
 ```
 
 #### Linear Regression Output
 
 ```
-[Add your output format here]
+Linear Regression
+Test Case 1
+Number of Points: 7
+Data Points:
+(1, 3)
+(2, 4)
+(3, 4)
+(4, 5)
+(5, 8)
+(6, 9)
+(7, 10)
+Target Equation: y = a + bx
+Intercept (a): 1.095238
+Slope (b): 1.190476
+Linear Relationship Equation: y = 1.095238 + 1.190476x
+
+Linear Regression
+Test Case 2
+Number of Points: 5
+Data Points:
+(1, 2)
+(2, 4)
+(3, 6)
+(4, 8)
+(5, 10)
+Target Equation: y = a + bx
+Intercept (a): 0.000000
+Slope (b): 2.000000
+Linear Relationship Equation: y = 0 + 2x
+
+Linear Regression
+Test Case 3
+Number of Points: 6
+Data Points:
+(1, 5)
+(2, 7)
+(3, 9)
+(4, 11)
+(5, 13)
+(6, 15)
+Target Equation: y = a + bx
+Intercept (a): 3.000000
+Slope (b): 2.000000
+Linear Relationship Equation: y = 3 + 2x
+
 ```
 
 ---
@@ -1699,20 +1798,148 @@ Error Percentage     : 2.877 %
 
 #### Polynomial Regression Code
 
-```python
-# Add your code here
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<double> gaussianElimination(vector<vector<double>> A, vector<double> B){
+    int n=B.size();
+    for(int i=0;i<n;i++){
+        for(int k=i+1;k<n;k++){
+            double factor=A[k][i]/A[i][i];
+            for(int j=i;j<n;j++) A[k][j]-=factor*A[i][j];
+            B[k]-=factor*B[i];
+        }
+    }
+    vector<double> X(n);
+    for(int i=n-1;i>=0;i--){
+        X[i]=B[i];
+        for(int j=i+1;j<n;j++) X[i]-=A[i][j]*X[j];
+        X[i]/=A[i][i];
+    }
+    return X;
+}
+
+vector<double> polynomialRegression(const vector<double>& x,const vector<double>& y,int degree){
+    int n=degree+1,m=x.size();
+    vector<vector<double>> A(n,vector<double>(n,0));
+    vector<double> B(n,0);
+
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++)
+            for(int k=0;k<m;k++)
+                A[i][j]+=pow(x[k],i+j);
+        for(int k=0;k<m;k++)
+            B[i]+=y[k]*pow(x[k],i);
+    }
+    return gaussianElimination(A,B);
+}
+
+int main(){
+    ifstream in("input.txt");
+    ofstream out("output.txt");
+    out<<fixed<<setprecision(6);
+
+    int tests;
+    in>>tests;
+
+    for(int t=1;t<=tests;t++){
+        int n,degree;
+        in>>n>>degree;
+        vector<double> x(n),y(n);
+        for(int i=0;i<n;i++) in>>x[i];
+        for(int i=0;i<n;i++) in>>y[i];
+
+        auto c=polynomialRegression(x,y,degree);
+
+        out<<"Polynomial Regression\n";
+        out<<"Test Case "<<t<<"\n";
+        out<<"Polynomial Degree: "<<degree<<"\n";
+        out<<"Target Equation: y = a0 + a1x + a2x^2 + ... + a"<<degree<<"x^"<<degree<<"\n";
+        out<<"Data Points:\n";
+        for(int i=0;i<n;i++) out<<"("<<x[i]<<", "<<y[i]<<")\n";
+        out<<"Coefficients:\n";
+        for(int i=0;i<c.size();i++) out<<"a"<<i<<" = "<<c[i]<<"\n";
+        out<<"Curve Equation: y = ";
+        for(int i=0;i<c.size();i++){
+            if(i>0) out<<" + ";
+            out<<c[i];
+            if(i>0) out<<"x^"<<i;
+        }
+        out<<"\n\n";
+    }
+}
+
 ```
 
 #### Polynomial Regression Input
 
 ```
-[Add your input format here]
+3
+5 2
+1 2 3 4 5
+6 11 18 27 38
+6 3
+1 2 3 4 5 6
+2 9 28 65 126 217
+5 1
+1 2 3 4 5
+3 5 7 9 11
+
 ```
 
 #### Polynomial Regression Output
 
 ```
-[Add your output format here]
+Polynomial Regression
+Test Case 1
+Polynomial Degree: 2
+Target Equation: y = a0 + a1x + a2x^2 + ... + a2x^2
+Data Points:
+(1, 6)
+(2, 11)
+(3, 18)
+(4, 27)
+(5, 38)
+Coefficients:
+a0 = 1.000000
+a1 = 2.000000
+a2 = 1.000000
+Curve Equation: y = 1 + 2x^1 + 1x^2
+
+Polynomial Regression
+Test Case 2
+Polynomial Degree: 3
+Target Equation: y = a0 + a1x + a2x^2 + ... + a3x^3
+Data Points:
+(1, 2)
+(2, 9)
+(3, 28)
+(4, 65)
+(5, 126)
+(6, 217)
+Coefficients:
+a0 = 0.000000
+a1 = 0.000000
+a2 = 0.000000
+a3 = 1.000000
+Curve Equation: y = 1x^3
+
+Polynomial Regression
+Test Case 3
+Polynomial Degree: 1
+Target Equation: y = a0 + a1x + ... + a1x^1
+Data Points:
+(1, 3)
+(2, 5)
+(3, 7)
+(4, 9)
+(5, 11)
+Coefficients:
+a0 = 1.000000
+a1 = 2.000000
+Curve Equation: y = 1 + 2x
+
 ```
 
 ---
@@ -1725,20 +1952,149 @@ Error Percentage     : 2.877 %
 
 #### Transcendental Regression Code
 
-```python
-# Add your code here
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+pair<double,double> linearFit(const vector<double>& X,const vector<double>& Y){
+    int n=X.size();
+    double sx=0,sy=0,sxy=0,sx2=0;
+    for(int i=0;i<n;i++){
+        sx+=X[i];
+        sy+=Y[i];
+        sxy+=X[i]*Y[i];
+        sx2+=X[i]*X[i];
+    }
+    double b=(n*sxy-sx*sy)/(n*sx2-sx*sx);
+    double a=(sy-b*sx)/n;
+    return {a,b};
+}
+
+int main(){
+    ifstream in("input.txt");
+    ofstream out("output.txt");
+    out<<fixed<<setprecision(6);
+
+    int tests;
+    in>>tests;
+
+    for(int t=1;t<=tests;t++){
+        int model,n;
+        in>>model>>n;
+
+        vector<double> x(n),y(n);
+        for(int i=0;i<n;i++) in>>x[i];
+        for(int i=0;i<n;i++) in>>y[i];
+
+        out<<"Transcendental Regression\n";
+        out<<"Test Case "<<t<<"\n";
+        out<<"Data Points:\n";
+        for(int i=0;i<n;i++)
+            out<<"("<<x[i]<<", "<<y[i]<<")\n";
+
+        if(model==1){
+            vector<double> X(n),Y(n);
+            for(int i=0;i<n;i++){
+                X[i]=x[i];
+                Y[i]=log(y[i]);
+            }
+            auto r=linearFit(X,Y);
+            out<<"Model: y = a e^(bx)\n";
+            out<<"a: "<<exp(r.first)<<"\n";
+            out<<"b: "<<r.second<<"\n";
+            out<<"Curve Equation: y = "<<exp(r.first)<<" e^("<<r.second<<"x)\n";
+        }
+
+        if(model==2){
+            vector<double> X(n),Y(n);
+            for(int i=0;i<n;i++){
+                X[i]=log(x[i]);
+                Y[i]=log(y[i]);
+            }
+            auto r=linearFit(X,Y);
+            out<<"Model: y = a x^b\n";
+            out<<"a: "<<exp(r.first)<<"\n";
+            out<<"b: "<<r.second<<"\n";
+            out<<"Curve Equation: y = "<<exp(r.first)<<" x^"<<r.second<<"\n";
+        }
+
+        if(model==3){
+            vector<double> X(n),Y(n);
+            for(int i=0;i<n;i++){
+                X[i]=exp(x[i]/4);
+                Y[i]=y[i];
+            }
+            auto r=linearFit(X,Y);
+            out<<"Model: y = a + b e^(x/4)\n";
+            out<<"a: "<<r.first<<"\n";
+            out<<"b: "<<r.second<<"\n";
+            out<<"Curve Equation: y = "<<r.first<<" + "<<r.second<<" e^(x/4)\n";
+        }
+
+        out<<"\n";
+    }
+}
+
 ```
 
 #### Transcendental Regression Input
 
 ```
-[Add your input format here]
+3
+1 5
+1 2 3 4 5
+3 8 20 55 148
+2 5
+1 2 3 4 5
+2 8 18 32 50
+3 5
+1 2 3 4 5
+6 9 14 22 35
+
 ```
 
 #### Transcendental Regression Output
 
 ```
-[Add your output format here]
+Transcendental Regression
+Test Case 1
+Data Points:
+(1, 3)
+(2, 8)
+(3, 20)
+(4, 55)
+(5, 148)
+Model: y = a e^(bx)
+a: 1.523602
+b: 0.998317
+Curve Equation: y = 1.523602 e^(0.998317x)
+
+Transcendental Regression
+Test Case 2
+Data Points:
+(1, 2)
+(2, 8)
+(3, 18)
+(4, 32)
+(5, 50)
+Model: y = a x^b
+a: 1.997814
+b: 2.000128
+Curve Equation: y = 1.997814 x^2.000128
+
+Transcendental Regression
+Test Case 3
+Data Points:
+(1, 6)
+(2, 9)
+(3, 14)
+(4, 22)
+(5, 35)
+Model: y = a + b e^(x/4)
+a: 3.056221
+b: 1.922654
+Curve Equation: y = 3.056221 + 1.922654 e^(x/4)
+
 ```
 
 ---
