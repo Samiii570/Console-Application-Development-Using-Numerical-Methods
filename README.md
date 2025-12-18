@@ -1086,7 +1086,7 @@ Data Points:
 (4, 16)
 Interpolation Point: 2.5
 Step Size: 1
-Forward Difference Table (Transposed):
+Forward Difference Table:
      1      1      1      1      1 
      2      2      2      2 
      4      4      4 
@@ -1102,7 +1102,7 @@ Data Points:
 (4, 64)
 Interpolation Point: 2.5
 Step Size: 1
-Forward Difference Table (Transposed):
+Forward Difference Table:
      1      7     12      6 
      8     19     18 
     27     37 
@@ -1205,7 +1205,7 @@ Data Points:
 (4, 16)
 Interpolation Point: 2.5
 Step Size: 1
-Backward Difference Table (Transposed):
+Backward Difference Table:
      1      1      1      1      1 
      2      2      2      2 
      4      4      4 
@@ -1221,7 +1221,7 @@ Data Points:
 (4, 64)
 Interpolation Point: 2.5
 Step Size: 1
-Backward Difference Table (Transposed):
+Backward Difference Table:
      1      7     12      6 
      8     19     18 
     27     37 
