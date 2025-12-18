@@ -1,173 +1,630 @@
-# Table of Contents
+Understood 👍
+You want **ONLY the `.md` code**, such that **when rendered on GitHub it looks structured, collapsible, and clean** — no explanation, no preview.
 
-- [Solution of Linear Equations](#solution-of-linear-equations)
-  - [Gauss Elimination Method](#gauss-elimination-method)
-    - [Theory](#gauss-elimination-theory)
-    - [Code](#gauss-elimination-code)
-    - [Input](#gauss-elimination-input)
-    - [Output](#gauss-elimination-output)
-  - [Gauss Jordan Elimination Method](#gauss-jordan-elimination-method)
-    - [Theory](#gauss-jordan-theory)
-    - [Code](#gauss-jordan-code)
-    - [Input](#gauss-jordan-input)
-    - [Output](#gauss-jordan-output)
-  - [LU Decomposition Method](#lu-decomposition-method)
-    - [Theory](#lu-decomposition-theory)
-    - [Code](#lu-decomposition-code)
-    - [Input](#lu-decomposition-input)
-    - [Output](#lu-decomposition-output)
-  - [Matrix Inversion](#matrix-inversion)
-    - [Theory](#matrix-inversion-theory)
-    - [Code](#matrix-inversion-code)
-    - [Input](#matrix-inversion-input)
-    - [Output](#matrix-inversion-output)
-
-- [Solution of Non-Linear Equations](#solution-of-non-linear-equations)
-  - [Bisection Method](#bisection-method)
-    - [Theory](#bisection-theory)
-    - [Code](#bisection-code)
-    - [Input](#bisection-input)
-    - [Output](#bisection-output)
-  - [False Position Method](#false-position-method)
-    - [Theory](#false-position-theory)
-    - [Code](#false-position-code)
-    - [Input](#false-position-input)
-    - [Output](#false-position-output)
+Below is a **pure GitHub-Markdown (`README.md`) code** using `<details>` + `<summary>` so it renders neatly.
 
 ---
 
-### Solution of Linear Equations
+```md
+# Numerical Methods in C++
 
-### Gauss Elimination Method
+## Overview
+This repository contains standard Numerical Methods implemented in C++.
+Each method is organized with theory, code, input, and output for academic use.
 
-#### Gauss Elimination Theory
-[Add your theory content here]
+---
 
-#### Gauss Elimination Code
-```python
-# Add your code here
+## Table of Contents
+
+- Solution of Non-Linear Equations  
+- Solution of Linear Equations  
+- Differential Equation Solving  
+- Interpolation Methods  
+- Numerical Differentiation  
+- Curve Fitting / Regression  
+- Numerical Integration  
+
+---
+
+## Solution of Non-Linear Equations
+
+<details>
+<summary><b>Bisection Method</b></summary>
+
+### Theory
 ```
 
-#### Gauss Elimination Input
+Write theory here
+
+````
+
+### Code
+```cpp
+// code here
+````
+
+### Input
+
 ```
-[Add your input format here]
+input format
 ```
 
-#### Gauss Elimination Output
+### Output
+
 ```
-[Add your output format here]
+output format
+```
+
+</details>
+
+<details>
+<summary><b>False Position Method</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+<details>
+<summary><b>Newton Raphson Method</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+<details>
+<summary><b>Secant Method</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+---
+
+## Solution of Linear Equations
+
+<details>
+<summary><b>Gauss Elimination Method</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+<details>
+<summary><b>Gauss Jordan Elimination Method</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+<details>
+<summary><b>LU Decomposition Method</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+<details>
+<summary><b>Matrix Inversion</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+---
+
+## Differential Equation Solving
+
+<details>
+<summary><b>Runge-Kutta 4th Order Method</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+---
+
+## Interpolation Methods
+
+<details>
+<summary><b>Newton Forward Interpolation</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+<details>
+<summary><b>Newton Backward Interpolation</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+<details>
+<summary><b>Newton Divided Difference Interpolation</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+---
+
+## Numerical Differentiation
+
+<details>
+<summary><b>Differentiation by Forward Interpolation</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+<details>
+<summary><b>Differentiation by Backward Interpolation</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+---
+
+## Curve Fitting / Regression
+
+<details>
+<summary><b>Linear Regression</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+<details>
+<summary><b>Polynomial Regression</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+<details>
+<summary><b>Transcendental Regression</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+---
+
+## Numerical Integration
+
+<details>
+<summary><b>Simpson's 1/3 Rule</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+<details>
+<summary><b>Simpson's 3/8 Rule</b></summary>
+
+### Theory
+
+```
+Write theory here
+```
+
+### Code
+
+```cpp
+// code here
+```
+
+### Input
+
+```
+input format
+```
+
+### Output
+
+```
+output format
+```
+
+</details>
+
+---
+
+## Purpose of This Repository
+
+* Academic reference
+* Lab and exam preparation
+* Easy structured implementation
+
+---
+
+## Authors
+
+
+
 ```
 
 ---
 
-### Gauss Jordan Elimination Method
+If you want next:
+- one `.md` per method  
+- auto-linking TOC  
+- GitHub Pages compatible version  
 
-#### Gauss Jordan Theory
-[Add your theory content here]
-
-#### Gauss Jordan Code
-```python
-# Add your code here
+Just say 👍
 ```
-
-#### Gauss Jordan Input
-```
-[Add your input format here]
-```
-
-#### Gauss Jordan Output
-```
-[Add your output format here]
-```
-
----
-
-### LU Decomposition Method
-
-#### LU Decomposition Theory
-[Add your theory content here]
-
-#### LU Decomposition Code
-```python
-# Add your code here
-```
-
-#### LU Decomposition Input
-```
-[Add your input format here]
-```
-
-#### LU Decomposition Output
-```
-[Add your output format here]
-```
-
----
-
-### Matrix Inversion
-
-#### Matrix Inversion Theory
-[Add your theory content here]
-
-#### Matrix Inversion Code
-```python
-# Add your code here
-```
-
-#### Matrix Inversion Input
-```
-[Add your input format here]
-```
-
-#### Matrix Inversion Output
-```
-[Add your output format here]
-```
-
----
-
-### Solution of Non-Linear Equations
-
-### Bisection Method
-
-#### Bisection Theory
-[Add your theory content here]
-
-#### Bisection Code
-```python
-# Add your code here
-```
-
-#### Bisection Input
-```
-[Add your input format here]
-```
-
-#### Bisection Output
-```
-[Add your output format here]
-```
-
----
-
-### False Position Method
-
-#### False Position Theory
-[Add your theory content here]
-
-#### False Position Code
-```python
-# Add your code here
-```
-
-#### False Position Input
-```
-[Add your input format here]
-```
-
-#### False Position Output
-```
-[Add your output format here]
-```
-
----
