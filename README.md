@@ -854,9 +854,9 @@ using namespace std;
 typedef double db;
 
 
-db evalPoly(db x, vector<db>& coeff){
-    db res=0, p=1;
-    for(int i=0;i<coeff.size();i++){
+db evalPoly(db x, vector<db> &coeff){
+    db res = 0, p = 1;
+    for(int i = 0; i < coeff.size(); i++){
         res += coeff[i]*p;
         p *= x;
     }
@@ -867,11 +867,11 @@ db evalPoly(db x, vector<db>& coeff){
 pair<db,int> bisectionRoot(vector<db>& coeff, db a, db b, db tol, int maxIter){
     db fa = evalPoly(a, coeff);
     db fb = evalPoly(b, coeff);
-    if(fa*fb>0) return {nan(""), 0};
-
-    db c; int iter=0;
+    if(fa*fb > 0) return {nan(""),0}; 
+    db c;
+    int iter;
     for(iter=1; iter<=maxIter; iter++){
-        c = (a+b)/2;
+        c = (a+b)/2.0;
         db fc = evalPoly(c, coeff);
         if(fabs(fc) < tol) return {c, iter};
         if(fa*fc < 0){ b=c; fb=fc; }
@@ -888,49 +888,44 @@ int main(){
     fout<<"Total Test Cases: "<<t<<"\n\n";
 
     for(int tc=1; tc<=t; tc++){
-        int deg; fin>>deg;
-        vector<db> coeff(deg+1);
-        for(int i=0;i<=deg;i++) fin>>coeff[i];
+        int degree; fin>>degree;
+        vector<db> coeff(degree+1);
+        for(int i=0; i<=degree; i++) fin>>coeff[i];
 
         db a,b,tol; int maxIter;
         fin>>a>>b>>tol>>maxIter;
 
-        fout<<"Test Case "<<tc<<"\n";
-        fout<<"Degree: "<<deg<<"\n";
-        fout<<"Function: ";
-        for(int i=deg;i>=0;i--){
-            fout<<coeff[i]<<"x^"<<i;
+        fout<<"Test Case #"<<tc<<"\n";
+        fout<<"Degree: "<<degree<<"\nFunction: ";
+        for(int i=degree; i>=0; i--){
+            if(coeff[i] == (int)coeff[i]) fout<<(int)coeff[i];
+            else fout<<fixed<<setprecision(6)<<coeff[i];
+            fout<<"x^"<<i;
             if(i>0) fout<<" + ";
         }
-        fout<<"\nError Tolerance: "<<tol<<"\n";
-        fout<<"Search Limit: ["<<a<<", "<<b<<"]\n";
-        fout<<"Roots:\n";
+        fout<<"\nError Tolerance: "<<tol;
+        fout<<"\nSearch Limit: ["<<a<<", "<<b<<"]\nRoots:\n";
 
-
-        int segments = 1000;
-        db step = (b-a)/segments;
-        vector<db> roots;
-        for(db x=a; x<b; x+=step){
-            db y = x+step;
-            auto r = bisectionRoot(coeff, x, y, tol, maxIter);
+        vector<pair<db,int>> roots;
+        int steps=50; 
+        db stepSize = (b-a)/steps;
+        for(db x=a; x<b; x+=stepSize){
+            auto r = bisectionRoot(coeff, x, x+stepSize, tol, maxIter);
             if(!isnan(r.first)){
-                bool unique = true;
-                for(auto root: roots){
-                    if(fabs(root - r.first)<1e-6) unique=false;
+                bool unique=true;
+                for(auto &p: roots){
+                    if(fabs(p.first - r.first) < 1e-4){ unique=false; break; }
                 }
-                if(unique) roots.push_back(r.first);
+                if(unique) roots.push_back(r);
             }
         }
 
-
-        for(int i=0;i<roots.size();i++){
-            fout<<"  x"<<i+1<<" = "<<fixed<<setprecision(6)<<roots[i]<<"\n";
+        for(int i=0; i<roots.size(); i++){
+            fout<<"  x"<<i+1<<" = "<<fixed<<setprecision(6)<<roots[i].first<<"\n";
         }
         fout<<"\n";
     }
-
-    fin.close();
-    fout.close();
+    fin.close(); fout.close();
     return 0;
 }
 
@@ -941,14 +936,15 @@ int main(){
 ```
 3
 2
-1 -3 2
+2 -3 1
 0 3 0.0001 100
 3
-1 0 -6 5
--2 3 0.0001 100
+5 -6 0 1
+-2 4 0.0001 100
 2
-1 -2 -3
--3 3 0.0001 100
+3 -5 2
+0 3 0.0001 100
+
 
 ```
 
@@ -957,33 +953,33 @@ int main(){
 ```
 Total Test Cases: 3
 
-Test Case 1
+Test Case #1
 Degree: 2
-Function: 2x^2 + -3x^1 + 1x^0
+Function: 1x^2 + -3x^1 + 2x^0
 Error Tolerance: 0.0001
 Search Limit: [0, 3]
 Roots:
-  x1 = 0.500063
-  x2 = 0.999938
+  x1 = 1.000078
+  x2 = 1.999922
 
-Test Case 2
+Test Case #2
 Degree: 3
-Function: 5.000000x^3 + -6.000000x^2 + 0.000000x^1 + 1.000000x^0
+Function: 1x^3 + 0x^2 + -6x^1 + 5x^0
 Error Tolerance: 0.000100
-Search Limit: [-2.000000, 3.000000]
+Search Limit: [-2.000000, 4.000000]
 Roots:
-  x1 = -0.358242
-  x2 = 0.558281
-  x3 = 1.000020
+  x1 = 0.999971
+  x2 = 1.791309
 
-Test Case 3
+Test Case #3
 Degree: 2
-Function: -3.000000x^2 + -2.000000x^1 + 1.000000x^0
+Function: 2x^2 + -5x^1 + 3x^0
 Error Tolerance: 0.000100
-Search Limit: [-3.000000, 3.000000]
+Search Limit: [0.000000, 3.000000]
 Roots:
-  x1 = -0.999984
-  x2 = 0.333328
+  x1 = 1.000078
+  x2 = 1.499941
+
 
 
 ```
