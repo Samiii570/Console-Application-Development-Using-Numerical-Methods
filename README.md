@@ -2281,19 +2281,122 @@ Approximate integral=46.875
 #### Simpson 3/8 Code
 
 ```cpp
-# Add your code here
+#include<bits/stdc++.h>
+using namespace std;
+
+typedef double db;
+
+
+db poly(db x, vector<db>& coeff){
+    db res = 0;
+    db p = 1;
+    for(int i=0;i<coeff.size();i++){
+        res += coeff[i]*p;
+        p *= x;
+    }
+    return res;
+}
+
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    int t;
+    fin >> t;
+    fout << "Total Test Cases: " << t << "\n\n";
+
+    for(int tc=1; tc<=t; tc++){
+        int deg;
+        fin >> deg;
+
+        vector<db> coeff(deg+1);
+        for(int i=0;i<=deg;i++) fin >> coeff[i];
+
+        db a,b;
+        int n;
+        fin >> a >> b >> n;
+
+        fout << "Test Case #" << tc << "\n";
+
+        if(n%3 != 0){
+            fout << "Invalid input: number of intervals must be multiple of 3\n\n";
+            continue;
+        }
+
+        db h = (b-a)/n;
+        db sum = poly(a, coeff) + poly(b, coeff);
+
+        for(int i=1; i<n; i++){
+            db x = a + i*h;
+            if(i%3 == 0) sum += 2*poly(x, coeff);
+            else sum += 3*poly(x, coeff);
+        }
+
+        db result = (3*h/8)*sum;
+
+
+        fout << "Polynomial degree: " << deg << "\n";
+        fout << "Coefficients: ";
+        for(db c : coeff) fout << c << " ";
+        fout << "\nInterval: [" << a << ", " << b << "]\n";
+        fout << "Number of intervals: " << n << "\n";
+        fout << "Step size (h): " << fixed << setprecision(6) << h << "\n";
+        fout << "Integral result: " << fixed << setprecision(6) << result << "\n\n";
+    }
+
+    fin.close();
+    fout.close();
+    return 0;
+}
+
 ```
 
 #### Simpson 3/8 Input
 
 ```
-[Add your input format here]
+3
+2
+1 0 1
+0 2 6
+3
+0 1 0 0
+1 3 9
+2
+2 -1 1
+0 2 12
+
 ```
 
 #### Simpson 3/8 Output
 
 ```
-[Add your output format here]
+Total Test Cases: 3
+
+Test Case #1
+Polynomial degree: 2
+Coefficients: 1 0 1 
+Interval: [0, 2]
+Number of intervals: 6
+Step size (h): 0.333333
+Integral result: 4.666667
+
+Test Case #2
+Polynomial degree: 3
+Coefficients: 0.000000 1.000000 0.000000 0.000000 
+Interval: [1.000000, 3.000000]
+Number of intervals: 9
+Step size (h): 0.222222
+Integral result: 4.000000
+
+Test Case #3
+Polynomial degree: 2
+Coefficients: 2.000000 -1.000000 1.000000 
+Interval: [0.000000, 2.000000]
+Number of intervals: 12
+Step size (h): 0.166667
+Integral result: 4.666667
+
+
 ```
 
 
