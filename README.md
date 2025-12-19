@@ -905,20 +905,171 @@ Roots:
 
 #### False Position Code
 
-```python
-# Add your code here
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+typedef double db;
+
+
+db evalPoly(db x, vector<db>& coeff){
+    db res=0, p=1;
+    for(int i=0;i<coeff.size();i++){
+        res += coeff[i]*p;
+        p *= x;
+    }
+    return res;
+}
+
+
+pair<db,int> falsePosition(vector<db>& coeff, db a, db b, db tol, int maxIter){
+    db fa = evalPoly(a, coeff);
+    db fb = evalPoly(b, coeff);
+    if(fa*fb>0) return {nan(""),0};
+
+    db c; int iter=0;
+    for(iter=1; iter<=maxIter; iter++){
+        c = (a*fb - b*fa)/(fb - fa);
+        db fc = evalPoly(c, coeff);
+        if(fabs(fc)<tol) return {c, iter};
+        if(fa*fc<0){ b=c; fb=fc; }
+        else{ a=c; fa=fc; }
+    }
+    return {c, iter};
+}
+
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+    int t; fin>>t;
+    fout<<"Number of Test Cases: "<<t<<"\n\n";
+
+    for(int tc=1; tc<=t; tc++){
+        int deg; fin>>deg;
+        vector<db> coeff(deg+1);
+        for(int i=0;i<=deg;i++) fin>>coeff[i];
+
+        db a,b,tol; int maxIter;
+        fin>>a>>b>>tol>>maxIter;
+
+        fout<<"--- TEST CASE "<<tc<<" ---\n";
+        fout<<"Interval of search: ["<<a<<", "<<b<<"]\n";
+        fout<<"Polynomial Degree: "<<deg<<"\n";
+        fout<<"Given Polynomial: ";
+        for(int i=deg;i>=0;i--){
+            fout<<coeff[i]<<"x^"<<i;
+            if(i>0) fout<<" + ";
+        }
+        fout<<"\nAllowed Error: "<<tol<<"\n";
+
+
+        int segments = 1000;
+        db step = (b-a)/segments;
+        vector<db> roots;
+        vector<pair<db,db>> intervals;
+
+        db prevX = a;
+        db prevY = evalPoly(prevX, coeff);
+
+        for(int i=1;i<=segments;i++){
+            db currX = a + i*step;
+            db currY = evalPoly(currX, coeff);
+
+            if(prevY*currY < 0){
+                auto r = falsePosition(coeff, prevX, currX, tol, maxIter);
+                if(!isnan(r.first)){
+                    bool unique = true;
+                    for(auto root: roots){
+                        if(fabs(root - r.first)<1e-6) unique=false;
+                    }
+                    if(unique){
+                        roots.push_back(r.first);
+                        intervals.push_back({prevX, currX});
+                    }
+                }
+            }
+
+            prevX = currX;
+            prevY = currY;
+        }
+
+
+        fout<<"Roots Discovered:\n";
+        for(int i=0;i<roots.size();i++){
+            fout<<"  -> Approx. Root "<<i+1<<" lies in ["<<intervals[i].first<<", "<<intervals[i].second<<"] = "<<fixed<<setprecision(6)<<roots[i]<<"\n";
+        }
+
+        fout<<"Summary of All Roots:\n";
+        for(int i=0;i<roots.size();i++){
+            fout<<"   Root#"<<i+1<<": "<<fixed<<setprecision(6)<<roots[i]<<"\n";
+        }
+
+        fout<<"\n";
+    }
+
+    fin.close();
+    fout.close();
+    return 0;
+}
+
 ```
 
 #### False Position Input
 
 ```
-[Add your input format here]
+3
+2
+1 -4 3
+0 3 0.0001 100
+3
+2 -3 -5 1
+-3 3 0.0001 100
+2
+1 2 -3
+-2 4 0.0001 100
+
 ```
 
 #### False Position Output
 
 ```
-[Add your output format here]
+Number of Test Cases: 3
+
+--- TEST CASE 1 ---
+Interval of search: [0, 3]
+Polynomial Degree: 2
+Given Polynomial: 3x^2 + -4x^1 + 1x^0
+Allowed Error: 0.0001
+Roots Discovered:
+  -> Approx. Root 1 lies in [0.333, 0.336] = 0.333335
+  -> Approx. Root 2 lies in [0.999000, 1.002000] = 0.999997
+Summary of All Roots:
+   Root#1: 0.333335
+   Root#2: 0.999997
+
+--- TEST CASE 2 ---
+Interval of search: [-3.000000, 3.000000]
+Polynomial Degree: 3
+Given Polynomial: 1.000000x^3 + -5.000000x^2 + -3.000000x^1 + 2.000000x^0
+Allowed Error: 0.000100
+Roots Discovered:
+  -> Approx. Root 1 lies in [-0.894000, -0.888000] = -0.890539
+  -> Approx. Root 2 lies in [0.408000, 0.414000] = 0.409756
+Summary of All Roots:
+   Root#1: -0.890539
+   Root#2: 0.409756
+
+--- TEST CASE 3 ---
+Interval of search: [-2.000000, 4.000000]
+Polynomial Degree: 2
+Given Polynomial: -3.000000x^2 + 2.000000x^1 + 1.000000x^0
+Allowed Error: 0.000100
+Roots Discovered:
+  -> Approx. Root 1 lies in [-0.338000, -0.332000] = -0.333329
+Summary of All Roots:
+   Root#1: -0.333329
+
+
 ```
 
 ---
