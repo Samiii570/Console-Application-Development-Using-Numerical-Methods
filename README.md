@@ -755,78 +755,89 @@ Solution Vector:
 
 #### Bisection Code
 ```cpp
-#include<iostream>
-#include<fstream>
-#include<vector>
-#include<cmath>
-#include<iomanip>
+#include<bits/stdc++.h>
 using namespace std;
 
 typedef double db;
 
+
 db evalPoly(db x, vector<db>& coeff){
     db res=0, p=1;
     for(int i=0;i<coeff.size();i++){
-        res+=coeff[i]*p;
-        p*=x;
+        res += coeff[i]*p;
+        p *= x;
     }
     return res;
 }
 
+
 pair<db,int> bisectionRoot(vector<db>& coeff, db a, db b, db tol, int maxIter){
-    db fa=evalPoly(a,coeff);
-    db fb=evalPoly(b,coeff);
-    db c=0;
-    int iter=0;
-    if(fa*fb>0) return {0,0};
-    for(iter=1;iter<=maxIter;iter++){
-        c=(a+b)/2;
-        db fc=evalPoly(c,coeff);
-        if(fabs(fc)<tol) return {c,iter};
-        if(fa*fc<0){b=c; fb=fc;}
-        else{a=c; fa=fc;}
+    db fa = evalPoly(a, coeff);
+    db fb = evalPoly(b, coeff);
+    if(fa*fb>0) return {nan(""), 0};
+
+    db c; int iter=0;
+    for(iter=1; iter<=maxIter; iter++){
+        c = (a+b)/2;
+        db fc = evalPoly(c, coeff);
+        if(fabs(fc) < tol) return {c, iter};
+        if(fa*fc < 0){ b=c; fb=fc; }
+        else{ a=c; fa=fc; }
     }
-    return {c,iter};
+    return {c, iter};
 }
 
 int main(){
     ifstream fin("input.txt");
     ofstream fout("output.txt");
+
     int t; fin>>t;
     fout<<"Total Test Cases: "<<t<<"\n\n";
-    for(int tc=1;tc<=t;tc++){
-        int degree; fin>>degree;
-        vector<db> coeff(degree+1);
-        for(int i=0;i<=degree;i++) fin>>coeff[i];
-        db a,b,tol; int maxIter; fin>>a>>b>>tol>>maxIter;
 
-        fout<<"Test Case "<<tc<<"\nFunction: f(x) = ";
-        for(int i=degree;i>=0;i--){
+    for(int tc=1; tc<=t; tc++){
+        int deg; fin>>deg;
+        vector<db> coeff(deg+1);
+        for(int i=0;i<=deg;i++) fin>>coeff[i];
+
+        db a,b,tol; int maxIter;
+        fin>>a>>b>>tol>>maxIter;
+
+        fout<<"Test Case "<<tc<<"\n";
+        fout<<"Degree: "<<deg<<"\n";
+        fout<<"Function: ";
+        for(int i=deg;i>=0;i--){
             fout<<coeff[i]<<"x^"<<i;
             if(i>0) fout<<" + ";
         }
-        fout<<"\nDegree: "<<degree<<"\nError Tolerance: "<<tol<<"\nSearch Limit: "<<b<<"\nRoots:\n";
+        fout<<"\nError Tolerance: "<<tol<<"\n";
+        fout<<"Search Limit: ["<<a<<", "<<b<<"]\n";
+        fout<<"Roots:\n";
 
-        vector<pair<db,int>> roots;
-        int steps=1000; // finer scanning
-        db stepSize=(b-a)/steps;
-        for(db x=a;x<b;x+=stepSize){
-            auto r=bisectionRoot(coeff,x,x+stepSize,tol,maxIter);
-            if(r.second>0){
-                bool unique=true;
-                for(auto &p:roots){
-                    if(fabs(p.first - r.first)<1e-6){unique=false; break;}
+
+        int segments = 1000;
+        db step = (b-a)/segments;
+        vector<db> roots;
+        for(db x=a; x<b; x+=step){
+            db y = x+step;
+            auto r = bisectionRoot(coeff, x, y, tol, maxIter);
+            if(!isnan(r.first)){
+                bool unique = true;
+                for(auto root: roots){
+                    if(fabs(root - r.first)<1e-6) unique=false;
                 }
-                if(unique) roots.push_back(r);
+                if(unique) roots.push_back(r.first);
             }
         }
 
-        for(auto &p:roots){
-            fout<<"  x = "<<fixed<<setprecision(6)<<p.first<<"\n";
+
+        for(int i=0;i<roots.size();i++){
+            fout<<"  x"<<i+1<<" = "<<fixed<<setprecision(6)<<roots[i]<<"\n";
         }
         fout<<"\n";
     }
-    fin.close(); fout.close();
+
+    fin.close();
+    fout.close();
     return 0;
 }
 
@@ -838,13 +849,14 @@ int main(){
 3
 2
 1 -3 2
-0 3 1e-4 50
+0 3 0.0001 100
 3
-1 -6 11 -6
-0 3 1e-4 100
+1 0 -6 5
+-2 3 0.0001 100
 2
-2 -7 3
--2 4 1e-4 100
+1 -2 -3
+-3 3 0.0001 100
+
 ```
 
 #### Bisection Output
@@ -853,32 +865,34 @@ int main(){
 Total Test Cases: 3
 
 Test Case 1
-Function: f(x) = 2x^2 + -3x^1 + 1x^0
 Degree: 2
+Function: 2x^2 + -3x^1 + 1x^0
 Error Tolerance: 0.0001
-Search Limit: 3
+Search Limit: [0, 3]
 Roots:
-  x = 0.500063
-  x = 0.999938
+  x1 = 0.500063
+  x2 = 0.999938
 
 Test Case 2
-Function: f(x) = -6.000000x^3 + 11.000000x^2 + -6.000000x^1 + 1.000000x^0
 Degree: 3
+Function: 5.000000x^3 + -6.000000x^2 + 0.000000x^1 + 1.000000x^0
 Error Tolerance: 0.000100
-Search Limit: 3.000000
+Search Limit: [-2.000000, 3.000000]
 Roots:
-  x = 0.333375
-  x = 0.499875
-  x = 1.000031
+  x1 = -0.358242
+  x2 = 0.558281
+  x3 = 1.000020
 
 Test Case 3
-Function: f(x) = 3.000000x^2 + -7.000000x^1 + 2.000000x^0
 Degree: 2
+Function: -3.000000x^2 + -2.000000x^1 + 1.000000x^0
 Error Tolerance: 0.000100
-Search Limit: 4.000000
+Search Limit: [-3.000000, 3.000000]
 Roots:
-  x = 0.333344
-  x = 1.999984
+  x1 = -0.999984
+  x2 = 0.333328
+
+
 ```
 
 ---
