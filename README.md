@@ -1001,27 +1001,27 @@ using namespace std;
 typedef double db;
 
 
-db evalPoly(db x, vector<db>& coeff){
+db evalPoly(db x, vector<db> &coeff){
     db res=0, p=1;
     for(int i=0;i<coeff.size();i++){
-        res += coeff[i]*p;
-        p *= x;
+        res+=coeff[i]*p;
+        p*=x;
     }
     return res;
 }
 
 
 pair<db,int> falsePosition(vector<db>& coeff, db a, db b, db tol, int maxIter){
-    db fa = evalPoly(a, coeff);
-    db fb = evalPoly(b, coeff);
+    db fa=evalPoly(a, coeff);
+    db fb=evalPoly(b, coeff);
     if(fa*fb>0) return {nan(""),0};
-
-    db c; int iter=0;
+    db c;
+    int iter;
     for(iter=1; iter<=maxIter; iter++){
-        c = (a*fb - b*fa)/(fb - fa);
+        c = b - fb*(b-a)/(fb-fa);
         db fc = evalPoly(c, coeff);
         if(fabs(fc)<tol) return {c, iter};
-        if(fa*fc<0){ b=c; fb=fc; }
+        if(fa*fc < 0){ b=c; fb=fc; }
         else{ a=c; fa=fc; }
     }
     return {c, iter};
@@ -1034,72 +1034,56 @@ int main(){
     fout<<"Number of Test Cases: "<<t<<"\n\n";
 
     for(int tc=1; tc<=t; tc++){
-        int deg; fin>>deg;
-        vector<db> coeff(deg+1);
-        for(int i=0;i<=deg;i++) fin>>coeff[i];
+        int degree; fin>>degree;
+        vector<db> coeff(degree+1);
+        for(int i=0;i<=degree;i++) fin>>coeff[i];
 
         db a,b,tol; int maxIter;
         fin>>a>>b>>tol>>maxIter;
 
         fout<<"--- TEST CASE "<<tc<<" ---\n";
         fout<<"Interval of search: ["<<a<<", "<<b<<"]\n";
-        fout<<"Polynomial Degree: "<<deg<<"\n";
+        fout<<"Polynomial Degree: "<<degree<<"\n";
         fout<<"Given Polynomial: ";
-        for(int i=deg;i>=0;i--){
-            fout<<coeff[i]<<"x^"<<i;
+        for(int i=degree;i>=0;i--){
+            if(coeff[i]==(int)coeff[i]) fout<<(int)coeff[i];
+            else fout<<fixed<<setprecision(6)<<coeff[i];
+            fout<<"x^"<<i;
             if(i>0) fout<<" + ";
         }
-        fout<<"\nAllowed Error: "<<tol<<"\n";
+        fout<<"\nAllowed Error: "<<tol<<"\nRoots Discovered:\n";
 
-
-        int segments = 1000;
-        db step = (b-a)/segments;
-        vector<db> roots;
-        vector<pair<db,db>> intervals;
-
-        db prevX = a;
-        db prevY = evalPoly(prevX, coeff);
-
-        for(int i=1;i<=segments;i++){
-            db currX = a + i*step;
-            db currY = evalPoly(currX, coeff);
-
-            if(prevY*currY < 0){
-                auto r = falsePosition(coeff, prevX, currX, tol, maxIter);
-                if(!isnan(r.first)){
-                    bool unique = true;
-                    for(auto root: roots){
-                        if(fabs(root - r.first)<1e-6) unique=false;
-                    }
-                    if(unique){
-                        roots.push_back(r.first);
-                        intervals.push_back({prevX, currX});
-                    }
+        vector<pair<db,int>> roots;
+        int steps=50;
+        db stepSize=(b-a)/steps;
+        for(db x=a; x<b; x+=stepSize){
+            auto r=falsePosition(coeff,x,x+stepSize,tol,maxIter);
+            if(!isnan(r.first)){
+                bool unique=true;
+                for(auto &p:roots){
+                    if(fabs(p.first-r.first)<1e-4){ unique=false; break; }
                 }
+                if(unique) roots.push_back(r);
             }
-
-            prevX = currX;
-            prevY = currY;
         }
 
-
-        fout<<"Roots Discovered:\n";
         for(int i=0;i<roots.size();i++){
-            fout<<"  -> Approx. Root "<<i+1<<" lies in ["<<intervals[i].first<<", "<<intervals[i].second<<"] = "<<fixed<<setprecision(6)<<roots[i]<<"\n";
+            db l = max(a, roots[i].first - stepSize/2);
+            db u = min(b, roots[i].first + stepSize/2);
+            fout<<"  -> Approx. Root "<<i+1<<" lies in ["<<fixed<<setprecision(3)<<l<<", "<<u<<"] = "<<fixed<<setprecision(6)<<roots[i].first<<"\n";
         }
 
         fout<<"Summary of All Roots:\n";
         for(int i=0;i<roots.size();i++){
-            fout<<"   Root#"<<i+1<<": "<<fixed<<setprecision(6)<<roots[i]<<"\n";
+            fout<<"   Root#"<<i+1<<": "<<fixed<<setprecision(6)<<roots[i].first<<"\n";
         }
-
         fout<<"\n";
     }
 
-    fin.close();
-    fout.close();
+    fin.close(); fout.close();
     return 0;
 }
+
 
 ```
 
@@ -1108,14 +1092,15 @@ int main(){
 ```
 3
 2
-1 -4 3
+3 -4 1
 0 3 0.0001 100
 3
-2 -3 -5 1
+1 -5 -3 2
 -3 3 0.0001 100
 2
-1 2 -3
--2 4 0.0001 100
+-3 2 1
+-2 2 0.0001 100
+
 
 ```
 
@@ -1127,36 +1112,40 @@ Number of Test Cases: 3
 --- TEST CASE 1 ---
 Interval of search: [0, 3]
 Polynomial Degree: 2
-Given Polynomial: 3x^2 + -4x^1 + 1x^0
+Given Polynomial: 1x^2 + -4x^1 + 3x^0
 Allowed Error: 0.0001
 Roots Discovered:
-  -> Approx. Root 1 lies in [0.333, 0.336] = 0.333335
-  -> Approx. Root 2 lies in [0.999000, 1.002000] = 0.999997
+  -> Approx. Root 1 lies in [0.970, 1.030] = 1.000008
+  -> Approx. Root 2 lies in [2.970, 3.000] = 3.000000
 Summary of All Roots:
-   Root#1: 0.333335
-   Root#2: 0.999997
+   Root#1: 1.000008
+   Root#2: 3.000000
 
 --- TEST CASE 2 ---
 Interval of search: [-3.000000, 3.000000]
 Polynomial Degree: 3
-Given Polynomial: 1.000000x^3 + -5.000000x^2 + -3.000000x^1 + 2.000000x^0
+Given Polynomial: 2x^3 + -3x^2 + -5x^1 + 1x^0
 Allowed Error: 0.000100
 Roots Discovered:
-  -> Approx. Root 1 lies in [-0.894000, -0.888000] = -0.890539
-  -> Approx. Root 2 lies in [0.408000, 0.414000] = 0.409756
+  -> Approx. Root 1 lies in [-1.183, -1.063] = -1.122904
+  -> Approx. Root 2 lies in [0.122, 0.242] = 0.182455
+  -> Approx. Root 3 lies in [2.380, 2.500] = 2.440449
 Summary of All Roots:
-   Root#1: -0.890539
-   Root#2: 0.409756
+   Root#1: -1.122904
+   Root#2: 0.182455
+   Root#3: 2.440449
 
 --- TEST CASE 3 ---
-Interval of search: [-2.000000, 4.000000]
+Interval of search: [-2.000000, 2.000000]
 Polynomial Degree: 2
-Given Polynomial: -3.000000x^2 + 2.000000x^1 + 1.000000x^0
+Given Polynomial: 1x^2 + 2x^1 + -3x^0
 Allowed Error: 0.000100
 Roots Discovered:
-  -> Approx. Root 1 lies in [-0.338000, -0.332000] = -0.333329
+  -> Approx. Root 1 lies in [0.960, 1.040] = 0.999996
 Summary of All Roots:
-   Root#1: -0.333329
+   Root#1: 0.999996
+
+
 
 
 ```
