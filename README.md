@@ -973,20 +973,94 @@ Roots:
 
 #### Runge-Kutta Code
 
-```python
-# Add your code here
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+double f(double x,double y){
+    return (x+y)/2.0;
+}
+
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    int t;
+    fin>>t;
+
+    for(int tc=1;tc<=t;tc++){
+        double x0,y0,xn,h;
+        fin>>x0>>y0>>xn>>h;
+
+        int n=(xn-x0)/h;
+        double x=x0;
+        double y=y0;
+
+        for(int i=1;i<=n;i++){
+            double k1=h*f(x,y);
+            double k2=h*f(x+h/2.0,y+k1/2.0);
+            double k3=h*f(x+h/2.0,y+k2/2.0);
+            double k4=h*f(x+h,y+k3);
+
+            y=y+(k1+2*k2+2*k3+k4)/6.0;
+            x=x+h;
+        }
+
+        fout<<fixed<<setprecision(3);
+        fout<<"TEST CASE #"<<tc<<"\n\n";
+        fout<<"Initial x0: "<<x0<<", y0: "<<y0<<"\n";
+        fout<<"Final x: "<<xn<<"\n";
+        fout<<"Step size (h): "<<h<<"\n";
+        fout<<"Number of steps: "<<n<<"\n";
+        fout<<setprecision(6);
+        fout<<"Result: y("<<xn<<") = "<<y<<"\n\n";
+    }
+
+    fin.close();
+    fout.close();
+    return 0;
+}
+
 ```
 
 #### Runge-Kutta Input
 
 ```
-[Add your input format here]
+3
+0 1 1.5 0.01
+0 2 2.0 0.001
+1 1 2.5 0.005
+
 ```
 
 #### Runge-Kutta Output
 
 ```
-[Add your output format here]
+TEST CASE #1
+
+Initial x0: 0.000, y0: 1.000
+Final x: 1.500
+Step size (h): 0.010
+Number of steps: 150
+Result: y(1.500000) = 2.851000
+
+TEST CASE #2
+
+Initial x0: 0.000, y0: 2.000
+Final x: 2.000
+Step size (h): 0.001
+Number of steps: 2000
+Result: y(2.000000) = 6.873127
+
+TEST CASE #3
+
+Initial x0: 1.000, y0: 1.000
+Final x: 2.500
+Step size (h): 0.005
+Number of steps: 300
+Result: y(2.500000) = 3.968000
+
+
 ```
 
 ---
