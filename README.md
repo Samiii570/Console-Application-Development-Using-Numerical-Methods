@@ -128,7 +128,33 @@ In this project, various important methods of Numerical Methods have been implem
 
 #### Gauss Elimination Theory
 
-[Add your theory content here]
+### Algorithm
+1. Write the system of equations in augmented matrix form.
+2. Use row operations to eliminate variables below the main diagonal.
+3. Convert the matrix into upper triangular form.
+4. Continue elimination until the last equation contains one unknown.
+5. Apply backward substitution to find the solution.
+
+### Mathematical Formula
+For a system AX = B, the augmented matrix is reduced as:
+
+[A | B] → [U | C]
+
+where U is an upper triangular matrix.
+
+Backward substitution:
+
+x_n = c_n / u_nn
+
+x_i = ( c_i − ( u_i(i+1)x_(i+1) + u_i(i+2)x_(i+2) + … + u_in x_n ) ) / u_ii
+
+### Brief
+Gauss Elimination is a basic numerical technique for solving linear systems.
+It works by simplifying equations step by step using row operations.
+The method follows a clear and logical structure.
+It is widely used in engineering and science problems.
+Care must be taken when pivot elements are very small.
+
 
 #### Gauss Elimination Code
 
