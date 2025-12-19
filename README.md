@@ -1163,29 +1163,37 @@ Summary of All Roots:
 ```cpp
 #include<bits/stdc++.h>
 using namespace std;
-
 typedef double db;
 
-db evalPoly(db x, vector<db>& coeff){
-    db res=0, p=1;
-    for(int i=0;i<coeff.size();i++){res+=coeff[i]*p; p*=x;}
+
+db evalPoly(db x, vector<db> &coeff){
+    db res=0,p=1;
+    for(int i=0;i<coeff.size();i++){
+        res+=coeff[i]*p;
+        p*=x;
+    }
     return res;
 }
 
-db evalPolyDeriv(db x, vector<db>& coeff){
-    db res=0, p=1;
-    for(int i=1;i<coeff.size();i++){res+=i*coeff[i]*p; p*=x;}
+
+db evalPolyDerivative(db x, vector<db> &coeff){
+    db res=0,p=1;
+    for(int i=1;i<coeff.size();i++){
+        res+=i*coeff[i]*p;
+        p*=x;
+    }
     return res;
 }
 
-pair<db,int> newtonRaphson(vector<db>& coeff, db x0, db tol, int maxIter){
+
+pair<db,int> newtonRaphson(vector<db> &coeff, db x0, db tol, int maxIter){
     db x=x0;
-    int iter=0;
+    int iter;
     for(iter=1;iter<=maxIter;iter++){
         db fx=evalPoly(x,coeff);
-        db fpx=evalPolyDeriv(x,coeff);
-        if(fabs(fpx)<1e-12) break;
-        db x1=x-fx/fpx;
+        db fdx=evalPolyDerivative(x,coeff);
+        if(fabs(fdx)<1e-12) break;
+        db x1=x-fx/fdx;
         if(fabs(x1-x)<tol) return {x1,iter};
         x=x1;
     }
@@ -1195,55 +1203,58 @@ pair<db,int> newtonRaphson(vector<db>& coeff, db x0, db tol, int maxIter){
 int main(){
     ifstream fin("input.txt");
     ofstream fout("output.txt");
-
     int t; fin>>t;
     fout<<"Total Test Cases: "<<t<<"\n\n";
 
     for(int tc=1;tc<=t;tc++){
-        int deg; fin>>deg;
-        vector<db> coeff(deg+1);
-        for(int i=0;i<=deg;i++) fin>>coeff[i];
+        int degree; fin>>degree;
+        vector<db> coeff(degree+1);
+        for(int i=0;i<=degree;i++) fin>>coeff[i];
+        db start,end,tol; int maxIter;
+        fin>>start>>end>>tol>>maxIter;
 
-        db xStart, tol; int maxIter;
-        fin>>xStart>>tol>>maxIter;
-
-        fout<<"TEST CASE : "<<tc<<"\n";
-        fout<<"Polynomial Degree: "<<deg<<"\n";
+        fout<<"TEST CASE #"<<tc<<"\n";
+        fout<<"Polynomial Degree: "<<degree<<"\n";
         fout<<"Given Polynomial: ";
-        for(int i=0;i<=deg;i++){
-            fout<<coeff[i]<<"x^"<<i;
-            if(i<deg) fout<<" + ";
+        for(int i=degree;i>=0;i--){
+            fout<<(int)coeff[i]<<"x^"<<i;
+            if(i>0) fout<<" + ";
         }
-        fout<<"\nInitial Guess x0: "<<xStart<<"\n";
+        fout<<"\nInitial Guess Range: ["<<start<<", "<<end<<"]\n";
         fout<<"Error Tolerance: "<<tol<<"\n";
-        fout<<"Maximum Iterations Allowed: "<<maxIter<<"\n";
+        fout<<"Max Iterations: "<<maxIter<<"\n";
+        fout<<"Approximate Roots Found:\n";
 
-        vector<db> roots;
-        vector<int> iterations;
-        int segments=10;
-        db step=1.0;
-        for(int i=0;i<segments;i++){
-            db guess=xStart+i*step;
-            auto r=newtonRaphson(coeff,guess,tol,maxIter);
-            bool unique=true;
-            for(auto val:roots){
-                if(fabs(val-r.first)<1e-6) unique=false;
+        vector<pair<db,int>> roots;
+        int steps=1000;
+        db stepSize=(end-start)/steps;
+
+        for(db x=start;x<end;x+=stepSize){
+            db f1=evalPoly(x,coeff);
+            db f2=evalPoly(x+stepSize,coeff);
+            if(f1*f2<=0){
+                db guess=(x+x+stepSize)/2;
+                auto r=newtonRaphson(coeff,guess,tol,maxIter);
+                bool unique=true;
+                for(auto &p:roots){
+                    if(fabs(p.first-r.first)<1e-6){unique=false; break;}
+                }
+                if(unique) roots.push_back(r);
             }
-            if(unique){roots.push_back(r.first); iterations.push_back(r.second);}
         }
 
-        fout<<"Approximate Roots Found:\n";
+        sort(roots.begin(),roots.end());
         for(int i=0;i<roots.size();i++){
-            fout<<"  Root "<<i+1<<" = "<<fixed<<setprecision(6)<<roots[i]
-                <<" (Iterations: "<<iterations[i]<<")\n";
+            fout<<"  Root "<<i+1<<" = "<<fixed<<setprecision(6)<<roots[i].first
+                <<" (Iterations: "<<roots[i].second<<")\n";
         }
         fout<<"\n";
     }
 
-    fin.close();
-    fout.close();
+    fin.close(); fout.close();
     return 0;
 }
+
 
 ```
 
@@ -1252,14 +1263,15 @@ int main(){
 ```
 3
 2
-1 -5 6
-0 0.0001 100
+1 -3 2
+0 3 0.0001 100
 3
 1 0 -6 5
-1 0.0001 100
+-2 4 0.0001 100
 2
-2 -7 3
-0 0.0001 100
+-2 5 -3
+0 3 0.0001 100
+
 
 ```
 
@@ -1268,34 +1280,38 @@ int main(){
 ```
 Total Test Cases: 3
 
-TEST CASE : 1
+TEST CASE #1
 Polynomial Degree: 2
-Given Polynomial: 1x^0 + -5x^1 + 6x^2
-Initial Guess x0: 0
+Given Polynomial: 2x^2 + -3x^1 + 1x^0
+Initial Guess Range: [0, 3]
 Error Tolerance: 0.0001
-Maximum Iterations Allowed: 100
+Max Iterations: 100
 Approximate Roots Found:
-  Root 1 = 0.333333 (Iterations: 6)
-  Root 2 = 0.500000 (Iterations: 6)
+  Root 1 = 0.500000 (Iterations: 2)
+  Root 2 = 1.000000 (Iterations: 2)
 
-TEST CASE : 2
+TEST CASE #2
 Polynomial Degree: 3
-Given Polynomial: 1.000000x^0 + 0.000000x^1 + -6.000000x^2 + 5.000000x^3
-Initial Guess x0: 1.000000
+Given Polynomial: 5x^3 + -6x^2 + 0x^1 + 1x^0
+Initial Guess Range: [-2.000000, 4.000000]
 Error Tolerance: 0.000100
-Maximum Iterations Allowed: 100
+Max Iterations: 100
 Approximate Roots Found:
-  Root 1 = 1.000000 (Iterations: 1)
+  Root 1 = -0.358258 (Iterations: 2)
+  Root 2 = 0.558258 (Iterations: 2)
+  Root 3 = 1.000000 (Iterations: 2)
 
-TEST CASE : 3
+TEST CASE #3
 Polynomial Degree: 2
-Given Polynomial: 2.000000x^0 + -7.000000x^1 + 3.000000x^2
-Initial Guess x0: 0.000000
+Given Polynomial: -3x^2 + 5x^1 + -2x^0
+Initial Guess Range: [0.000000, 3.000000]
 Error Tolerance: 0.000100
-Maximum Iterations Allowed: 100
+Max Iterations: 100
 Approximate Roots Found:
-  Root 1 = 0.333333 (Iterations: 4)
-  Root 2 = 2.000000 (Iterations: 1)
+  Root 1 = 0.666667 (Iterations: 2)
+  Root 2 = 1.000000 (Iterations: 2)
+
+
 
 
 ```
