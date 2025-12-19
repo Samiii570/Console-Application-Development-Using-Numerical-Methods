@@ -274,7 +274,26 @@ Case 3: Unique Solution 2.000 3.000 -1.000
 
 #### Gauss Jordan Theory
 
-[Add your theory content here]
+### Algorithm
+1. Convert the system into augmented matrix form.
+2. Make the leading element of each row equal to one.
+3. Eliminate all other elements in the pivot column.
+4. Reduce the matrix completely.
+5. Read the solution directly.
+
+### Mathematical Formula
+
+[A | B] → [I | X]
+
+where I is the identity matrix and X is the solution vector.
+
+### Brief
+Gauss Jordan Elimination is an extension of Gauss Elimination.
+It removes the need for backward substitution.
+Each variable is isolated directly during elimination.
+The solution is easy to interpret.
+Although slower, it is very systematic and accurate.
+
 
 #### Gauss Jordan Code
 
@@ -413,7 +432,34 @@ Unique Solution 2.000 3.000 -1.000
 
 #### LU Decomposition Theory
 
-[Add your theory content here]
+### Algorithm
+1. Decompose the matrix A into L and U.
+2. Solve LY = B using forward substitution.
+3. Solve UX = Y using backward substitution.
+4. Obtain the final solution.
+
+### Mathematical Formula
+
+A = L × U
+
+Forward substitution:
+
+y_1 = b_1
+y_i = b_i − ( l_i1 y_1 + l_i2 y_2 + … + l_i(i−1) y_(i−1) )
+
+Backward substitution:
+
+x_n = y_n / u_nn
+
+x_i = ( y_i − ( u_i(i+1)x_(i+1) + … + u_in x_n ) ) / u_ii
+
+### Brief
+LU Decomposition simplifies solving large systems.
+It reduces repeated computations.
+The method is efficient for multiple right-hand sides.
+It is commonly used in numerical software.
+LU decomposition improves computational speed.
+
 
 #### LU Decomposition Code
 
@@ -599,7 +645,28 @@ Unique Solution 1.000 1.000 2.000
 
 #### Matrix Inversion Theory
 
-[Add your theory content here]
+### Algorithm
+1. Check whether the determinant of A is non-zero.
+2. Form the augmented matrix [A | I].
+3. Apply Gauss Jordan elimination.
+4. Extract the inverse matrix.
+5. Multiply inverse with B to get the solution.
+
+### Mathematical Formula
+
+X = A_inverse × B
+
+Matrix transformation:
+
+[A | I] → [I | A_inverse]
+
+### Brief
+Matrix Inversion Method gives a direct solution.
+It is easy to understand mathematically.
+The method works only for non-singular matrices.
+It becomes inefficient for large matrices.
+Inverse computation is computationally expensive.
+
 
 #### Matrix Inversion Code
 
@@ -1753,7 +1820,34 @@ Estimated Error (next term): 0
 
 #### Differentiation Forward Theory
 
-[Add your theory content here]
+### Algorithm
+1. Choose equally spaced data near the start.
+2. Construct the forward difference table.
+3. Compute step size h.
+4. Find u = (x − x0) / h.
+5. Apply forward differentiation formula.
+
+### Mathematical Formula
+
+First derivative:
+
+f'(x) = [ Δf0 + (2u − 1)Δ²f0/2 + (3u² − 6u + 2)Δ³f0/6 + … ] / h
+
+Second derivative:
+
+f''(x) = [ Δ²f0 + (u − 1)Δ³f0 + … ] / h²
+
+where:
+
+u = (x − x0) / h
+
+### Brief
+Forward differentiation is used near the beginning of data.
+It requires equally spaced points.
+The method is simple and systematic.
+Accuracy improves with higher differences.
+It is suitable for polynomial functions.
+
 
 #### Differentiation Forward Code
 
@@ -1890,7 +1984,29 @@ Second Derivative at p = 1.200 : 7.200
 
 #### Differentiation Backward Theory
 
-[Add your theory content here]
+### Algorithm
+1. Choose equally spaced data near the end.
+2. Construct the backward difference table.
+3. Compute step size h.
+4. Find s = (x − xn) / h.
+5. Apply backward differentiation formula.
+
+### Mathematical Formula
+
+First derivative:
+
+f'(x) = [ ∇f_n + (2s + 1)∇²f_n/2 + (3s² + 6s + 2)∇³f_n/6 + … ] / h
+
+where:
+
+s = (x − x_n) / h
+
+### Brief
+Backward differentiation is used near the last data point.
+It uses backward differences.
+The method gives good accuracy near the end.
+It is effective for smooth functions.
+Backward interpolation complements forward interpolation.
 
 #### Differentiation Backward Code
 
