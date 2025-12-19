@@ -2207,38 +2207,87 @@ Simpson’s 1/3 Rule works by fitting a parabolic curve through three equally sp
 #### Simpson 1/3 Code
 
 ```cpp
-#include<iostream>
-#include<fstream>
-#include<cmath>
+#include<bits/stdc++.h>
 using namespace std;
 
-double f(double x){
-    return x*x+1;
-}
+typedef double db;
 
-double simpsonOneThird(double a,double b,int n){
-    double h=(b-a)/n;
-    double sum=f(a)+f(b);
-    for(int i=1;i<n;i++){
-        double x=a+i*h;
-        if(i%2==0) sum+=2*f(x);
-        else sum+=4*f(x);
+db poly(db x, vector<db>& c){
+    db res=0, p=1;
+    for(int i=0;i<c.size();i++){
+        res+=c[i]*p;
+        p*=x;
     }
-    return (h/3)*sum;
+    return res;
 }
 
 int main(){
     ifstream fin("input.txt");
-    ofstream fout("output_1_3.txt");
-    double a,b;
-    int n;
-    int t=1;
-    while(fin>>a>>b>>n){
-        fout<<"Test case "<<t<<": a="<<a<<", b="<<b<<", n="<<n<<"\n";
-        double result=simpsonOneThird(a,b,n);
-        fout<<"Approximate integral="<<result<<"\n\n";
-        t++;
+    ofstream fout("output.txt");
+
+    int t;
+    fin>>t;
+    fout<<"Total Test Cases: "<<t<<"\n\n";
+
+    for(int tc=1;tc<=t;tc++){
+        int deg;
+        fin>>deg;
+
+        vector<db> coef(deg+1);
+        for(int i=0;i<=deg;i++) fin>>coef[i];
+
+        db a,b;
+        int n;
+        fin>>a>>b>>n;
+
+        fout<<"Test Case "<<tc<<"\n";
+
+        if(n%2!=0){
+            fout<<"Invalid input: n must be even\n\n";
+            continue;
+        }
+
+        db h=(b-a)/n;
+        db sum=poly(a,coef)+poly(b,coef);
+
+        for(int i=1;i<n;i++){
+            db x=a+i*h;
+            if(i%2==0) sum+=2*poly(x,coef);
+            else sum+=4*poly(x,coef);
+        }
+
+        db ans=(h/3)*sum;
+
+
+        if(tc%3==1){
+            fout<<"Integration Interval: ["<<a<<", "<<b<<"]\n";
+            fout<<"Polynomial Order: "<<deg<<"\n";
+            fout<<"Given Coefficients: ";
+            for(db v:coef) fout<<v<<" ";
+            fout<<"\nTotal Segments Used: "<<n<<"\n";
+            fout<<"Computed Step Size h: "<<fixed<<setprecision(6)<<h<<"\n";
+            fout<<"Final Integral Approximation: "<<fixed<<setprecision(6)<<ans<<"\n\n";
+        }
+        else if(tc%3==2){
+            fout<<"Polynomial Order: "<<deg<<"\n";
+            fout<<"Integration Interval: ["<<a<<", "<<b<<"]\n";
+            fout<<"Total Segments Used: "<<n<<"\n";
+            fout<<"Given Coefficients: ";
+            for(db v:coef) fout<<v<<" ";
+            fout<<"\nComputed Step Size h: "<<fixed<<setprecision(6)<<h<<"\n";
+            fout<<"Final Integral Approximation: "<<fixed<<setprecision(6)<<ans<<"\n\n";
+        }
+        else{
+            fout<<"Given Coefficients: ";
+            for(db v:coef) fout<<v<<" ";
+            fout<<"\nPolynomial Order: "<<deg<<"\n";
+            fout<<"Integration Interval: ["<<a<<", "<<b<<"]\n";
+            fout<<"Computed Step Size h: "<<fixed<<setprecision(6)<<h<<"\n";
+            fout<<"Total Segments Used: "<<n<<"\n";
+            fout<<"Final Integral Approximation: "<<fixed<<setprecision(6)<<ans<<"\n\n";
+        }
     }
+
     fin.close();
     fout.close();
     return 0;
@@ -2250,23 +2299,50 @@ int main(){
 #### Simpson 1/3 Input
 
 ```
+3
+2
+1 0 1
 0 2 4
+3
+0 2 0 1
 1 3 6
-0 5 12
+2
+2 -1 1
+0 2 8
+
 
 ```
 
 #### Simpson 1/3 Output
 
 ```
-Test case 1: a=0, b=2, n=4
-Approximate integral=4.66667
+Total Test Cases: 3
 
-Test case 2: a=1, b=3, n=6
-Approximate integral=10
+Test Case 1
+Integration Interval: [0, 2]
+Polynomial Order: 2
+Given Coefficients: 1 0 1 
+Total Segments Used: 4
+Computed Step Size h: 0.500000
+Final Integral Approximation: 4.666667
 
-Test case 3: a=0, b=5, n=12
-Approximate integral=46.875
+Test Case 2
+Polynomial Order: 3
+Integration Interval: [1.000000, 3.000000]
+Total Segments Used: 6
+Given Coefficients: 0.000000 2.000000 0.000000 1.000000 
+Computed Step Size h: 0.333333
+Final Integral Approximation: 28.000000
+
+Test Case 3
+Given Coefficients: 2.000000 -1.000000 1.000000 
+Polynomial Order: 2
+Integration Interval: [0.000000, 2.000000]
+Computed Step Size h: 0.250000
+Total Segments Used: 8
+Final Integral Approximation: 4.666667
+
+
 
 ```
 
