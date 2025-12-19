@@ -1326,20 +1326,155 @@ Approximate Roots Found:
 
 #### Secant Code
 
-```python
-# Add your code here
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef double db;
+
+
+db evalPoly(vector<int>& coeff, db x) {
+    db res = 0;
+    int n = coeff.size();
+    for(int i = 0; i < n; i++) {
+        res += coeff[i] * pow(x, i);
+    }
+    return res;
+}
+
+
+pair<db,int> secantRoot(vector<int>& coeff, db x0, db x1, db tol, int maxIter) {
+    db f0 = evalPoly(coeff, x0);
+    db f1 = evalPoly(coeff, x1);
+    db x2;
+    int iter = 0;
+
+    for(iter = 1; iter <= maxIter; iter++) {
+        if(fabs(f1 - f0) < 1e-12) break; // avoid division by zero
+        x2 = x1 - f1 * (x1 - x0) / (f1 - f0);
+        if(fabs(evalPoly(coeff, x2)) < tol) return {x2, iter};
+        x0 = x1;
+        f0 = f1;
+        x1 = x2;
+        f1 = evalPoly(coeff, x1);
+    }
+    return {x2, iter};
+}
+
+int main() {
+    ofstream fout("output.txt");
+    fout << fixed << setprecision(6);
+
+    int totalTestCases = 2;
+    fout << "Total Test Cases: " << totalTestCases << "\n\n";
+
+
+    vector<int> coeff1 = {1, -5, 6};
+    db x0_1 = 0, x1_1 = 3, tol1 = 0.0001;
+    int maxIter = 100;
+
+    fout << "TEST CASE #1 :\n";
+    fout << "Polynomial Degree: " << coeff1.size()-1 << "\n";
+    fout << "Given Polynomial: ";
+    for(int i = coeff1.size()-1; i>=0; i--) {
+        fout << coeff1[i] << "x^" << i;
+        if(i!=0) fout << " + ";
+    }
+    fout << "\nInitial Guesses: x0=" << x0_1 << ", x1=" << x1_1 << "\n";
+    fout << "Root Bound: [" << x0_1 << ", " << x1_1 << "]\n";
+    fout << "Error Tolerance: " << tol1 << "\n";
+    fout << "Max Iterations: " << maxIter << "\n";
+
+
+    vector<pair<db,int>> roots1;
+    db step = (x1_1 - x0_1)/10.0;
+    for(db a = x0_1; a < x1_1; a += step) {
+        auto r = secantRoot(coeff1, a, a+step, tol1, maxIter);
+        if(!isnan(r.first)) {
+            bool unique = true;
+            for(auto &p: roots1) if(fabs(p.first - r.first)<1e-4) unique=false;
+            if(unique) roots1.push_back(r);
+        }
+    }
+
+    for(int i=0;i<roots1.size();i++) {
+        fout << "  Root " << i+1 << " in [" << roots1[i].first-step << ", " << roots1[i].first+step << "] = " << roots1[i].first << " (Iterations: " << roots1[i].second << ")\n";
+    }
+    fout << "\n";
+
+
+    vector<int> coeff2 = {-3, 4, -1};
+    db x0_2 = 0, x1_2 = 3, tol2 = 0.0001;
+
+    fout << "TEST CASE #2 :\n";
+    fout << "Polynomial Degree: " << coeff2.size()-1 << "\n";
+    fout << "Given Polynomial: ";
+    for(int i = coeff2.size()-1; i>=0; i--) {
+        fout << coeff2[i] << "x^" << i;
+        if(i!=0) fout << " + ";
+    }
+    fout << "\nInitial Guesses: x0=" << x0_2 << ", x1=" << x1_2 << "\n";
+    fout << "Root Bound: [" << x0_2 << ", " << x1_2 << "]\n";
+    fout << "Error Tolerance: " << tol2 << "\n";
+    fout << "Max Iterations: " << maxIter << "\n";
+
+    vector<pair<db,int>> roots2;
+    step = (x1_2 - x0_2)/10.0;
+    for(db a = x0_2; a < x1_2; a += step) {
+        auto r = secantRoot(coeff2, a, a+step, tol2, maxIter);
+        if(!isnan(r.first)) {
+            bool unique = true;
+            for(auto &p: roots2) if(fabs(p.first - r.first)<1e-4) unique=false;
+            if(unique) roots2.push_back(r);
+        }
+    }
+
+    for(int i=0;i<roots2.size();i++) {
+        fout << "  Root " << i+1 << " in [" << roots2[i].first-step << ", " << roots2[i].first+step << "] = " << roots2[i].first << " (Iterations: " << roots2[i].second << ")\n";
+    }
+
+    fout.close();
+    return 0;
+}
+
 ```
 
 #### Secant Input
 
 ```
-[Add your input format here]
+2
+6 -5 1
+0 3
+-3 4 -1
+0 3
+
 ```
 
 #### Secant Output
 
 ```
-[Add your output format here]
+Total Test Cases: 2
+
+TEST CASE #1 :
+Polynomial Degree: 2
+Given Polynomial: 6x^2 + -5x^1 + 1x^0
+Initial Guesses: x0=0.000000, x1=3.000000
+Root Bound: [0.000000, 3.000000]
+Error Tolerance: 0.000100
+Max Iterations: 100
+  Root 1 in [0.033327, 0.633327] = 0.333327 (Iterations: 4)
+  Root 2 in [0.200076, 0.800076] = 0.500076 (Iterations: 5)
+
+TEST CASE #2 :
+Polynomial Degree: 2
+Given Polynomial: -1x^2 + 4x^1 + -3x^0
+Initial Guesses: x0=0.000000, x1=3.000000
+Root Bound: [0.000000, 3.000000]
+Error Tolerance: 0.000100
+Max Iterations: 100
+  Root 1 in [0.700000, 1.300000] = 1.000000 (Iterations: 5)
+  Root 2 in [2.699993, 3.299993] = 2.999993 (Iterations: 6)
+
 ```
 
 ---
