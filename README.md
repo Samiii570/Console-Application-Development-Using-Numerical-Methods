@@ -1108,20 +1108,144 @@ Summary of All Roots:
 
 #### Newton Raphson Code
 
-```python
-# Add your code here
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+typedef double db;
+
+db evalPoly(db x, vector<db>& coeff){
+    db res=0, p=1;
+    for(int i=0;i<coeff.size();i++){res+=coeff[i]*p; p*=x;}
+    return res;
+}
+
+db evalPolyDeriv(db x, vector<db>& coeff){
+    db res=0, p=1;
+    for(int i=1;i<coeff.size();i++){res+=i*coeff[i]*p; p*=x;}
+    return res;
+}
+
+pair<db,int> newtonRaphson(vector<db>& coeff, db x0, db tol, int maxIter){
+    db x=x0;
+    int iter=0;
+    for(iter=1;iter<=maxIter;iter++){
+        db fx=evalPoly(x,coeff);
+        db fpx=evalPolyDeriv(x,coeff);
+        if(fabs(fpx)<1e-12) break;
+        db x1=x-fx/fpx;
+        if(fabs(x1-x)<tol) return {x1,iter};
+        x=x1;
+    }
+    return {x,iter};
+}
+
+int main(){
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+
+    int t; fin>>t;
+    fout<<"Total Test Cases: "<<t<<"\n\n";
+
+    for(int tc=1;tc<=t;tc++){
+        int deg; fin>>deg;
+        vector<db> coeff(deg+1);
+        for(int i=0;i<=deg;i++) fin>>coeff[i];
+
+        db xStart, tol; int maxIter;
+        fin>>xStart>>tol>>maxIter;
+
+        fout<<"TEST CASE : "<<tc<<"\n";
+        fout<<"Polynomial Degree: "<<deg<<"\n";
+        fout<<"Given Polynomial: ";
+        for(int i=0;i<=deg;i++){
+            fout<<coeff[i]<<"x^"<<i;
+            if(i<deg) fout<<" + ";
+        }
+        fout<<"\nInitial Guess x0: "<<xStart<<"\n";
+        fout<<"Error Tolerance: "<<tol<<"\n";
+        fout<<"Maximum Iterations Allowed: "<<maxIter<<"\n";
+
+        vector<db> roots;
+        vector<int> iterations;
+        int segments=10;
+        db step=1.0;
+        for(int i=0;i<segments;i++){
+            db guess=xStart+i*step;
+            auto r=newtonRaphson(coeff,guess,tol,maxIter);
+            bool unique=true;
+            for(auto val:roots){
+                if(fabs(val-r.first)<1e-6) unique=false;
+            }
+            if(unique){roots.push_back(r.first); iterations.push_back(r.second);}
+        }
+
+        fout<<"Approximate Roots Found:\n";
+        for(int i=0;i<roots.size();i++){
+            fout<<"  Root "<<i+1<<" = "<<fixed<<setprecision(6)<<roots[i]
+                <<" (Iterations: "<<iterations[i]<<")\n";
+        }
+        fout<<"\n";
+    }
+
+    fin.close();
+    fout.close();
+    return 0;
+}
+
 ```
 
 #### Newton Raphson Input
 
 ```
-[Add your input format here]
+3
+2
+1 -5 6
+0 0.0001 100
+3
+1 0 -6 5
+1 0.0001 100
+2
+2 -7 3
+0 0.0001 100
+
 ```
 
 #### Newton Raphson Output
 
 ```
-[Add your output format here]
+Total Test Cases: 3
+
+TEST CASE : 1
+Polynomial Degree: 2
+Given Polynomial: 1x^0 + -5x^1 + 6x^2
+Initial Guess x0: 0
+Error Tolerance: 0.0001
+Maximum Iterations Allowed: 100
+Approximate Roots Found:
+  Root 1 = 0.333333 (Iterations: 6)
+  Root 2 = 0.500000 (Iterations: 6)
+
+TEST CASE : 2
+Polynomial Degree: 3
+Given Polynomial: 1.000000x^0 + 0.000000x^1 + -6.000000x^2 + 5.000000x^3
+Initial Guess x0: 1.000000
+Error Tolerance: 0.000100
+Maximum Iterations Allowed: 100
+Approximate Roots Found:
+  Root 1 = 1.000000 (Iterations: 1)
+
+TEST CASE : 3
+Polynomial Degree: 2
+Given Polynomial: 2.000000x^0 + -7.000000x^1 + 3.000000x^2
+Initial Guess x0: 0.000000
+Error Tolerance: 0.000100
+Maximum Iterations Allowed: 100
+Approximate Roots Found:
+  Root 1 = 0.333333 (Iterations: 4)
+  Root 2 = 2.000000 (Iterations: 1)
+
+
 ```
 
 ---
