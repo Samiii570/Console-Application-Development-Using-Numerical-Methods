@@ -2748,28 +2748,37 @@ Curve Equation: y = 3.056221 + 1.922654 e^(x/4)
 
 #### Simpson 1/3 Theory
 
-```
-Numerical integration is used to evaluate definite integrals when the analytical solution of an integral is either difficult or impossible to obtain. Simpson’s 1/3 Rule is one of the most widely used numerical integration techniques due to its simplicity and relatively high accuracy. In this method, the entire integration interval is divided into an even number of equal sub-intervals. The fundamental assumption of Simpson’s 1/3 Rule is that the function can be approximated by a second-degree polynomial (parabola) over each pair of consecutive sub-intervals.
-Unlike the trapezoidal rule, which assumes linear variation of the function, Simpson’s 1/3 Rule assumes a smooth and continuous curvature of the function. As a result, it provides better accuracy, especially for functions that are reasonably smooth within the given limits.
+**Key Points / Features:**  
+- Requires the number of subintervals `n` to be **even**.  
+- Uses **parabolic arcs** to approximate the curve of the function.  
+- Step size is calculated as `h = (b - a)/n`.  
+- Formula combines function values at endpoints and midpoints of subintervals.
 
-Formula :
-Let the lower and upper limits of integration be a and b respectively. The interval [a, b] is divided into n equal sub-intervals, where n must be an even number. 
-step size, h = (b − a) / n.
-The approximate value of the definite integral is given by:
-∫a to b f(x) dx ≈ (h/3)[f(x0) + f(xn) + 4(f(x1)+f(x3)+…) + 2(f(x2)+f(x4)+…)]
+**Formula:**  
+∫[a to b] f(x) dx ≈ (h/3) * [f(x0) + 4(f(x1) + f(x3) + ... + f(xn-1)) + 2(f(x2) + f(x4) + ... + f(xn-2)) + f(xn)]
 
-Algorithm :
-1. Read the lower limit a, upper limit b, and an even number of sub-intervals n. 
-2. Calculate the step size h using h = (b − a) / n. 
-3. Evaluate the function at the first and last points and add them.
-4.Evaluate the function at all odd-indexed points and multiply each by 4. 
-5. Evaluate the function at all even-indexed points (excluding boundaries) and multiply each by 2. 6. Add all the weighted function values. 
-7. Multiply the total sum by h/3 to obtain the approximate value of the integral.
 
-Working Principle :
-Simpson’s 1/3 Rule works by fitting a parabolic curve through three equally spaced points of the function. By integrating this parabolic approximation instead of the original function, the area under the curve is estimated with improved precision. The use of different weighting factors for odd and even indexed points ensures that the curvature of the function is properly accounted for.
+Where:  
+- `x0 = a`, `xn = b`  
+- `h` is the step size  
+- `n` is even
 
-```
+**Example:**  
+Approximate ∫0^2 (1 + x^2) dx with n = 4:  
+1. Step size: `h = (2 - 0)/4 = 0.5`  
+2. Points: `x0=0, x1=0.5, x2=1, x3=1.5, x4=2`  
+3. Apply formula:  
+∫0^2 (1 + x^2) dx ≈ (0.5/3) * [f(0) + 4*(f(0.5) + f(1.5)) + 2*f(1) + f(2)]
+
+
+**Applications / Uses:**  
+- Approximating definite integrals when analytical integration is difficult  
+- Engineering problems involving area, volume, and structural analysis  
+- Physics problems for work, energy, and probability distributions
+
+**Notes / Tips:**  
+- Ensure `n` is even; otherwise, use Simpson’s 3/8 Rule.  
+- More accurate for smooth functions with continuous derivatives.
 
 #### Simpson 1/3 Code
 
