@@ -1201,7 +1201,32 @@ Summary of All Roots:
 
 #### Newton Raphson Theory
 
-[Add your theory content here]
+The Newton-Raphson Method is a numerical technique used to find the roots of a real-valued function. It uses the tangent line at an initial guess to approximate the root and iteratively refines the estimate. It is faster than Bisection and False Position methods for well-behaved functions.
+  
+- Requires the function `f(x)` to be **differentiable**.  
+- Convergence is **quadratic** if the initial guess is close to the root.  
+- Iteratively uses the derivative of the function to refine the root estimate.  
+- Sensitive to the choice of initial guess; poor guesses may lead to divergence.
+
+**Algorithm:**  
+1. Choose an initial guess `x0`.  
+2. Compute the next approximation using:  
+x_{n+1} = x_n - f(x_n)/f'(x_n)
+3. Repeat step 2 until |f(x_n)| < tolerance or the desired accuracy is achieved.
+
+**Example:**  
+Find a root of `f(x) = x^2 - 4` starting with `x0 = 3`:  
+1. Compute derivative: `f'(x) = 2x`  
+2. Apply formula:  
+x1 = x0 - f(x0)/f'(x0) = 3 - (3^2 - 4)/(2*3) = 3 - 5/6 = 2.1667
+3. Repeat:  
+x2 = 2.1667 - (2.1667^2 - 4)/(2*2.1667) ≈ 2.0064
+x3 ≈ 2.0000
+
+Root converges to `x ≈ 2`.
+
+
+
 
 #### Newton Raphson Code
 
