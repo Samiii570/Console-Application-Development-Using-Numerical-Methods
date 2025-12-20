@@ -1714,7 +1714,29 @@ Result: y(2.500000) = 3.968000
 
 #### Newton Forward Theory
 
-[Add your theory content here]
+ 
+Newton Forward Interpolation is used to estimate the value of a function at a point near the **beginning** of a table of equally spaced data points.
+  
+- Works with **equally spaced data** points.  
+- Uses the **forward difference operator (Δ)**.  
+- More accurate when the value to estimate is **near the first data point**.  
+- Iterative polynomial construction using forward differences.
+
+**Algorithm:**  
+f(x) ≈ f(x0) + uΔf(x0) + u(u-1)/2! Δ²f(x0) + ... + u(u-1)...(u-n+1)/n! Δⁿf(x0)
+
+Where:  
+- `u = (x - x0)/h`, `h` is the spacing between x-values  
+- Δ is the forward difference operator  
+- `n` is the number of terms used
+
+**Example:**  
+Given data: x = 0,1,2; f(x) = 1,2,5  
+Estimate f(0.5):  
+u = (0.5 - 0)/1 = 0.5
+f(0.5) ≈ f(0) + 0.5Δf(0) + 0.5(0.5-1)/2 * Δ²f(0)
+
+
 
 #### Newton Forward Code
 
