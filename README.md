@@ -2498,7 +2498,30 @@ Error Percentage     : 2.877 %
 
 #### Linear Regression Theory
 
-[Add your theory content here]
+  
+Linear Regression is a statistical method used to model the relationship between a dependent variable `y` and an independent variable `x` by fitting a straight line (`y = mx + c`) to the data points.
+  
+- Models the data with a **straight line**.  
+- Parameters `m` (slope) and `c` (intercept) are determined using the **least squares method**.  
+- Minimizes the sum of the squares of the vertical deviations of the points from the line.  
+- Suitable when the relationship between variables is approximately linear.
+
+**Algorithm:**  
+m = [nΣ(xy) - ΣxΣy] / [nΣ(x^2) - (Σx)^2]
+c = [Σy - mΣx] / n
+
+Where:  
+- `n` = number of data points  
+- Σx, Σy = sum of x and y values  
+- Σ(xy) = sum of products of x and y
+
+**Example:**  
+Given data points: (1,2), (2,3), (3,5)  
+m = [3*(12 + 23 + 35) - (1+2+3)(2+3+5)] / [3*(1^2+2^2+3^2) - (1+2+3)^2] = 1.5
+c = [2+3+5 - 1.5*(1+2+3)] / 3 = 0.33
+y ≈ 1.5x + 0.33
+
+
 
 #### Linear Regression Code
 
@@ -2623,7 +2646,28 @@ Linear Relationship Equation: y = 3 + 2x
 
 #### Polynomial Regression Theory
 
-[Add your theory content here]
+  
+Polynomial Regression is a regression technique where the relationship between the independent variable `x` and the dependent variable `y` is modeled as an **nth-degree polynomial**.
+
+- Fits data with a **curve** instead of a straight line.  
+- Useful when data shows a **non-linear trend**.  
+- Parameters are estimated using **least squares method**.  
+- Degree of the polynomial is chosen based on data complexity.
+
+**Algorithm:**  
+y = a0 + a1x + a2x^2 + ... + an*x^n
+
+Where:  
+- `n` = degree of the polynomial  
+- `a0, a1, ..., an` = coefficients determined using least squares
+
+**Example:**  
+Given data: x = 1,2,3; y = 1,4,9  
+Fit a quadratic polynomial: y ≈ a0 + a1x + a2x^2
+Solve simultaneous equations to find coefficients: a0=0, a1=0, a2=1
+y ≈ x^2
+
+
 
 #### Polynomial Regression Code
 
@@ -2777,7 +2821,28 @@ Curve Equation: y = 1 + 2x
 
 #### Transcendental Regression Theory
 
-[Add your theory content here]
+
+ 
+Transcendental Regression is used to fit data using **non-polynomial functions** such as exponential, logarithmic, or trigonometric functions. It is suitable when the relationship between variables is not polynomial.
+
+- Fits data to functions like **y = a*e^(bx)**, **y = a*ln(x) + b**, or **y = a*sin(bx) + c**.  
+- Parameters are determined using **least squares or nonlinear optimization**.  
+- Useful for data with **exponential growth, decay, or periodic patterns**.
+
+**Algorithm:**  
+Example: For exponential regression:  
+y = a * e^(bx)
+Take ln(y) = ln(a) + bx => Apply linear regression to ln(y) vs x
+
+
+**Example:**  
+Given data: x = 0,1,2; y = 2,4.4,9.6  
+Assume y = ae^(bx)
+ln(y) = ln(a) + b*x
+Apply linear regression on ln(y) vs x to find ln(a) and b
+Compute a = e^(ln(a)), b
+
+
 
 #### Transcendental Regression Code
 
