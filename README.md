@@ -2921,8 +2921,30 @@ Final Integral Approximation: 4.666667
 ### Simpson's 3/8 Rule
 
 #### Simpson 3/8 Theory
+ 
+Simpson’s 3/8 Rule is a numerical method used to approximate the definite integral of a function. It is similar to Simpson’s 1/3 Rule but uses cubic polynomials to approximate the curve over subintervals. It is useful when the number of subintervals is a multiple of 3.
+  
+- Requires the number of subintervals `n` to be a **multiple of 3**.  
+- Uses **cubic polynomials** to approximate the curve.  
+- Step size is calculated as `h = (b - a)/n`.  
+- More accurate than the Trapezoidal Rule for smooth functions.
 
-[Add your theory content here]
+**Formula:**  
+∫[a to b] f(x) dx ≈ (3h/8) * [f(x0) + 3(f(x1) + f(x2) + f(x4) + f(x5) + ...) + 2(f(x3) + f(x6) + ...) + f(xn)]
+
+Where:  
+- `x0 = a`, `xn = b`  
+- `h` is the step size  
+- `n` is a multiple of 3
+
+**Example:**  
+Approximate ∫0^3 (1 + x^2) dx with n = 3:  
+1. Step size: `h = (3 - 0)/3 = 1`  
+2. Points: `x0=0, x1=1, x2=2, x3=3`  
+3. Apply formula:  
+∫0^3 (1 + x^2) dx ≈ (31/8) * [f(0) + 3(f(1) + f(2)) + f(3)]
+
+
 
 #### Simpson 3/8 Code
 
