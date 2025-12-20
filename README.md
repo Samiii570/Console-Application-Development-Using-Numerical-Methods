@@ -1854,7 +1854,29 @@ Interpolated Value: 15.625000
 
 #### Newton Backward Theory
 
-[Add your theory content here]
+ 
+Newton Backward Interpolation is used to estimate the value of a function at a point near the **end** of a table of equally spaced data points.
+ 
+- Works with **equally spaced data** points.  
+- Uses the **backward difference operator (∇)**.  
+- More accurate when the value to estimate is **near the last data point**.  
+- Iterative polynomial construction using backward differences.
+
+**Algorithm:**  
+f(x) ≈ f(xn) + u∇f(xn) + u(u+1)/2! ∇²f(xn) + ... + u(u+1)...(u+n-1)/n! ∇ⁿf(xn)
+
+Where:  
+- `u = (x - xn)/h`, `h` is the spacing between x-values  
+- ∇ is the backward difference operator  
+- `n` is the number of terms used
+
+**Example:**  
+Given data: x = 0,1,2; f(x) = 1,2,5  
+Estimate f(1.5):  
+u = (1.5 - 2)/1 = -0.5
+f(1.5) ≈ f(2) + (-0.5)*∇f(2) + (-0.5)(-0.5+1)/2 * ∇²f(2)
+
+
 
 #### Newton Backward Code
 
@@ -1973,7 +1995,28 @@ Interpolated Value: 15.625000
 
 #### Newton Divided Difference Theory
 
-[Add your theory content here]
+  
+Newton Divided Difference Interpolation is used for **unequally spaced data points**. It constructs an interpolation polynomial using divided differences.
+
+- Works for **unequally spaced data**.  
+- Uses **divided differences** instead of forward/backward differences.  
+- Flexible for any point in the dataset.  
+- Polynomial construction avoids the limitation of equally spaced data.
+
+**Algorithm:**  
+f(x) = f[x0] + (x - x0)f[x0,x1] + (x - x0)(x - x1)f[x0,x1,x2] + ... + (x - x0)...(x - xn-1)f[x0,x1,...,xn]
+
+Where:  
+- `f[x0,x1,...,xn]` are the divided differences  
+- Works for both equally and unequally spaced data
+
+**Example:**  
+Given data: x = 1,2,4; f(x) = 1,3,15  
+Estimate f(3):  
+Compute divided differences f[x0,x1], f[x1,x2], f[x0,x1,x2], ...
+f(3) ≈ f[x0] + (3 - 1)f[x0,x1] + (3 - 1)(3 - 2)*f[x0,x1,x2]
+
+
 
 #### Newton Divided Difference Code
 
