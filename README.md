@@ -1009,7 +1009,7 @@ Roots:
 
 ---
 
-### False Position Method (Regula Falsi)
+### False Position Method
 
 #### False Position Theory
   
