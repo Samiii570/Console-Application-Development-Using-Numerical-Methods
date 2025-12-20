@@ -2747,8 +2747,9 @@ Curve Equation: y = 3.056221 + 1.922654 e^(x/4)
 ### Simpson's 1/3 Rule
 
 #### Simpson 1/3 Theory
-
-**Key Points / Features:**  
+ 
+Simpson’s 1/3 Rule is a numerical method used to approximate the definite integral of a function. It estimates the area under a curve by approximating the function with quadratic polynomials over subintervals. It is more accurate than the Trapezoidal Rule for the same number of intervals.
+  
 - Requires the number of subintervals `n` to be **even**.  
 - Uses **parabolic arcs** to approximate the curve of the function.  
 - Step size is calculated as `h = (b - a)/n`.  
@@ -2771,14 +2772,7 @@ Approximate ∫0^2 (1 + x^2) dx with n = 4:
 ∫0^2 (1 + x^2) dx ≈ (0.5/3) * [f(0) + 4*(f(0.5) + f(1.5)) + 2*f(1) + f(2)]
 
 
-**Applications / Uses:**  
-- Approximating definite integrals when analytical integration is difficult  
-- Engineering problems involving area, volume, and structural analysis  
-- Physics problems for work, energy, and probability distributions
 
-**Notes / Tips:**  
-- Ensure `n` is even; otherwise, use Simpson’s 3/8 Rule.  
-- More accurate for smooth functions with continuous derivatives.
 
 #### Simpson 1/3 Code
 
