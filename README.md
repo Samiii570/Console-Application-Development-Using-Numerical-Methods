@@ -1391,8 +1391,31 @@ Approximate Roots Found:
 ### Secant Method
 
 #### Secant Theory
+ 
+The Secant Method is a numerical technique used to find the roots of a function. It is similar to the Newton-Raphson Method but does **not require the derivative** of the function. Instead, it uses a secant line through two initial guesses to approximate the root.
+  
+- Requires two initial guesses, `x0` and `x1`.  
+- Does **not require the derivative** of the function.  
+- Convergence is generally faster than Bisection but slower than Newton-Raphson.  
+- Can fail if the secant line is nearly horizontal or if the function is highly nonlinear.
 
-[Add your theory content here]
+**Algorithm:**  
+1. Choose two initial guesses `x0` and `x1`.  
+2. Compute the next approximation using:  
+x_{n+1} = x_n - f(x_n) * (x_n - x_{n-1}) / (f(x_n) - f(x_{n-1}))
+3. Replace `x_{n-1}` with `x_n` and `x_n` with `x_{n+1}`.  
+4. Repeat step 2–3 until |f(x_n)| < tolerance or desired accuracy is achieved.
+
+**Example:**  
+Find a root of `f(x) = x^2 - 4` with initial guesses `x0 = 1`, `x1 = 3`:  
+1. Compute next approximation:  
+x2 = 3 - (3^2 - 4)(3 - 1)/((3^2 - 4) - (1^2 - 4)) = 3 - (52)/(5 - (-3)) = 3 - 10/8 = 1.75
+2. Repeat:  
+x3 = 1.75 - f(1.75)*(1.75 - 3)/(f(1.75) - f(3)) ≈ 2.0087
+x4 ≈ 2.0000
+
+Root converges to `x ≈ 2`.
+
 
 #### Secant Code
 
