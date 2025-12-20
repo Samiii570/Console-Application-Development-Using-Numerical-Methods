@@ -1580,7 +1580,37 @@ Max Iterations: 100
 
 #### Runge-Kutta Theory
 
-[Add your theory content here]
+ 
+The Runge-Kutta 4th Order Method (RK4) is a numerical technique used to solve ordinary differential equations (ODEs) of the form `dy/dx = f(x, y)` with a given initial condition `y(x0) = y0`. RK4 is widely used because it provides high accuracy without requiring higher derivatives of the function.
+
+- Provides **fourth-order accuracy**, meaning the error per step is proportional to `h^5` and cumulative error is proportional to `h^4`.  
+- Iterative method that uses **four weighted slopes** to estimate the next value.  
+- More accurate than Euler’s method for the same step size.  
+- Requires computation of `f(x, y)` four times per step.
+
+**Algorithm:**  
+Given `dy/dx = f(x, y)` and step size `h`:
+
+k1 = h * f(x_n, y_n)
+k2 = h * f(x_n + h/2, y_n + k1/2)
+k3 = h * f(x_n + h/2, y_n + k2/2)
+k4 = h * f(x_n + h, y_n + k3)
+y_{n+1} = y_n + (1/6)(k1 + 2k2 + 2*k3 + k4)
+x_{n+1} = x_n + h
+
+
+**Example:**  
+Solve `dy/dx = x + y`, with `y(0) = 1` and step size `h = 0.1`:  
+1. Compute slopes:  
+k1 = 0.1 * f(0, 1) = 0.1*(0+1) = 0.1
+k2 = 0.1 * f(0.05, 1+0.05) = 0.1*(0.05+1.05) = 0.11
+k3 = 0.1 * f(0.05, 1+0.055) = 0.1*(0.05+1.055) = 0.1105
+k4 = 0.1 * f(0.1, 1+0.1105) = 0.1*(0.1+1.1105) = 0.12105
+2. Compute next value:  
+y1 = 1 + (1/6)(0.1 + 20.11 + 2*0.1105 + 0.12105) ≈ 1.11034
+
+
+
 
 #### Runge-Kutta Code
 
