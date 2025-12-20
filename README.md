@@ -844,7 +844,30 @@ Solution Vector:
 ### Bisection Method
 
 #### Bisection Theory
-[Add your theory content here]
+
+The Bisection Method is a numerical method used to find the roots of a continuous function. It works by repeatedly dividing an interval `[a, b]` in half and selecting the subinterval in which the function changes sign, thereby narrowing down to the root.
+
+ 
+- Requires the function `f(x)` to be **continuous** on `[a, b]`.  
+- The root exists only if `f(a)` and `f(b)` have **opposite signs** (`f(a)*f(b) < 0`).  
+- Iteratively reduces the interval to approximate the root.  
+- Simple and reliable, but may be slower compared to other methods.
+
+**Algorithm**  
+1. Choose initial interval `[a, b]` such that `f(a)*f(b) < 0`.  
+2. Compute midpoint: `c = (a + b)/2`.  
+3. If `f(c) = 0` (or |f(c)| < tolerance), `c` is the root.  
+4. If `f(a)*f(c) < 0`, set `b = c`; else set `a = c`.  
+5. Repeat steps 2–4 until desired accuracy is achieved.
+
+**Example:**  
+Find a root of `f(x) = x^2 - 4` in `[1, 3]`:  
+1. Initial interval: `[a, b] = [1, 3]`  
+2. Midpoint: `c = (1 + 3)/2 = 2`  
+3. Check `f(c) = 2^2 - 4 = 0`  
+4. Root found: `x = 2`
+
+
 
 #### Bisection Code
 ```cpp
