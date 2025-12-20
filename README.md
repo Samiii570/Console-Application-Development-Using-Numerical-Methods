@@ -1009,11 +1009,33 @@ Roots:
 
 ---
 
-### False Position Method
+### False Position Method (Regula Falsi)
 
 #### False Position Theory
+  
+The False Position Method, also called Regula Falsi Method, is a numerical technique used to find the roots of a continuous function. It improves upon the Bisection Method by using a straight line (secant) through the interval endpoints to approximate the root, leading to faster convergence in some cases.
+ 
+- Requires the function `f(x)` to be **continuous** on `[a, b]`.  
+- The root exists only if `f(a)` and `f(b)` have **opposite signs** (`f(a)*f(b) < 0`).  
+- Uses a **linear approximation** to find the next estimate of the root.  
+- Convergence may be faster than the Bisection Method if the function is well-behaved.
 
-[Add your theory content here]
+**Algorithm:**  
+1. Choose initial interval `[a, b]` such that `f(a)*f(b) < 0`.  
+2. Compute the next approximation:  
+c = b - (f(b)*(b - a)) / (f(b) - f(a))
+3. If `f(c) = 0` (or |f(c)| < tolerance), `c` is the root.  
+4. If `f(a)*f(c) < 0`, set `b = c`; else set `a = c`.  
+5. Repeat steps 2–4 until desired accuracy is achieved.
+
+**Example:**  
+Find a root of `f(x) = x^2 - 4` in `[1, 3]`:  
+1. Initial interval: `[a, b] = [1, 3]`  
+2. Compute `c`:  
+c = 3 - (f(3)(3 - 1)) / (f(3) - f(1)) = 3 - (52)/(5 - (-3)) = 3 - 10/8 = 1.75
+3. Update interval based on sign of `f(c)` and repeat until convergence.
+
+
 
 #### False Position Code
 
