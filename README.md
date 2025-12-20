@@ -1,5 +1,5 @@
-### Project Overview
-In this project, various important methods of Numerical Methods have been implemented and presented in a topic-wise manner. The project is divided into major sections including Solution of Linear Equations, Non-Linear Equations, Differential Equation Solving, Interpolation Methods, Numerical Differentiation, Curve Fitting/Regression, and Numerical Integration. Each method under every section is organized separately into Theory, C++ Code, Input, and Output parts. The overall structure and topic-wise organization of the project are clearly documented in the README.md file, making the work easy to understand and follow. This project serves as a well-organized and user-friendly reference for learning numerical methods. 
+# Project Overview
+#### In this project, various important methods of Numerical Methods have been implemented and presented in a topic-wise manner. The project is divided into major sections including Solution of Linear Equations, Non-Linear Equations, Differential Equation Solving, Interpolation Methods, Numerical Differentiation, Curve Fitting/Regression, and Numerical Integration. Each method under every section is organized separately into Theory, C++ Code, Input, and Output parts. The overall structure and topic-wise organization of the project are clearly documented in the README.md file, making the work easy to understand and follow. This project serves as a well-organized and user-friendly reference for learning numerical methods.
 ---
 
 # Table of Contents
